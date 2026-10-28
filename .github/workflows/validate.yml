@@ -36,3 +36,37 @@ jobs:
           }
           console.log(`Validated ${scripts.length} inline script(s) and phone app markers.`);
           NODE
+      - name: Verify deployed Notion Worker configuration
+        run: |
+          node --input-type=module <<'NODE'
+          const base = 'https://personal-work-os.dendoshakarasu.workers.dev';
+          const origin = 'https://personal-work-os-3mr.pages.dev';
+          const signal = AbortSignal.timeout(12000);
+          const healthResponse = await fetch(`${base}/api/health`, {
+            headers: { Origin: origin, Accept: 'application/json' },
+            cache: 'no-store',
+            signal
+          });
+          if (!healthResponse.ok) {
+            throw new Error(`Worker health endpoint returned HTTP ${healthResponse.status}`);
+          }
+          const health = await healthResponse.json();
+          console.log(`Worker service: ${health.service || 'unknown'}`);
+          console.log(`Mode: ${health.mode || 'unknown'}`);
+          console.log(`Required runtime configuration: ${health.configured === true ? 'present' : 'missing'}`);
+          console.log(`Notion writes enabled: ${health.writesEnabled === true}`);
+          if (health.ok !== true || health.mode !== 'read-only' || health.configured !== true) {
+            throw new Error('Worker is deployed but reports missing runtime configuration. Check APP_ACCESS_KEY and NOTION_API_KEY under Cloudflare Worker Secrets.');
+          }
+
+          const authResponse = await fetch(`${base}/api/tasks?limit=1`, {
+            headers: { Origin: origin, Accept: 'application/json' },
+            cache: 'no-store',
+            signal
+          });
+          console.log(`Task endpoint without bearer key: HTTP ${authResponse.status} (expected 401)`);
+          if (authResponse.status !== 401) {
+            throw new Error(`Unexpected task endpoint response: HTTP ${authResponse.status}; expected 401 for an unauthenticated request.`);
+          }
+          console.log('Live Worker health and read-only authorization gate passed.');
+          NODE
