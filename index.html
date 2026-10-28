@@ -1,58 +1,301 @@
 <!doctype html>
 <html lang="en">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="theme-color" content="#11130f">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="Work OS">
-<title>Personal Work OS</title>
-<link rel="manifest" href="./manifest.webmanifest">
-<link rel="apple-touch-icon" href="./icon.svg">
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+<meta name="theme-color" content="#0b0d12" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+<meta name="apple-mobile-web-app-title" content="Personal Work OS" />
+<link rel="manifest" href="./manifest.webmanifest" />
+<link rel="icon" href="./icon.svg" type="image/svg+xml" />
+<link rel="apple-touch-icon" href="./icon.svg" />
+<title>Personal Agent — Work OS</title>
 <style>
-:root{color-scheme:dark;--bg:#10120f;--panel:#1b1e19;--line:#30362d;--muted:#a6ada0;--accent:#c7f36b;--text:#f2f4ed;--danger:#ff9f8f}
-*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font:16px -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;padding:env(safe-area-inset-top) 0 calc(88px + env(safe-area-inset-bottom));}
-header{padding:22px 18px 16px;position:sticky;top:0;background:rgba(16,18,15,.95);backdrop-filter:blur(12px);z-index:2;border-bottom:1px solid var(--line)}
-.eyebrow{font-size:12px;letter-spacing:.12em;color:var(--accent);text-transform:uppercase;font-weight:700}h1{font-size:26px;line-height:1.1;margin:8px 0 5px}p{color:var(--muted);line-height:1.45;margin:5px 0}.wrap{padding:16px;max-width:720px;margin:auto}.card{border:1px solid var(--line);background:var(--panel);border-radius:18px;padding:16px;margin-bottom:12px}.row{display:flex;align-items:center;justify-content:space-between;gap:10px}.statgrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin:14px 0}.stat{padding:14px;border-radius:15px;background:var(--panel);border:1px solid var(--line)}.num{font-size:28px;font-weight:750;color:var(--accent)}.label{font-size:12px;color:var(--muted);margin-top:3px}h2{font-size:18px;margin:0 0 12px}label{display:block;font-size:13px;color:var(--muted);margin:11px 0 6px}input,select,textarea{width:100%;font:inherit;background:#11140f;border:1px solid #40473b;border-radius:12px;color:var(--text);padding:12px;min-height:46px}textarea{resize:vertical;min-height:70px}button{font:inherit;font-weight:650;border:0;border-radius:12px;padding:12px 15px;min-height:44px;cursor:pointer}.primary{background:var(--accent);color:#18200d}.secondary{background:#2a3025;color:var(--text);border:1px solid #444b3d}.danger{background:transparent;color:var(--danger);padding:6px 8px;min-height:36px}.full{width:100%;margin-top:12px}.task{padding:12px 0;border-top:1px solid var(--line)}.task:first-child{border-top:0}.tasktitle{font-weight:650;overflow-wrap:anywhere}.meta{font-size:12px;color:var(--muted);margin-top:5px}.pill{font-size:11px;border:1px solid #4b553f;border-radius:99px;padding:4px 8px;color:var(--accent);white-space:nowrap}.empty{color:var(--muted);padding:12px 0}.nav{position:fixed;z-index:5;bottom:0;left:0;right:0;padding:8px 6px calc(8px + env(safe-area-inset-bottom));display:grid;grid-template-columns:repeat(4,1fr);background:rgba(24,27,22,.97);border-top:1px solid var(--line);backdrop-filter:blur(16px)}.nav button{background:transparent;color:var(--muted);font-size:11px;padding:8px 2px;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:4px}.nav button.active{color:var(--accent)}.nav .ico{font-size:20px}.hidden{display:none!important}.note{font-size:12px;margin-top:12px}.score{font-weight:750;color:var(--accent)}
+:root{--bg:#0b0d12;--panel:#121722;--panel2:#171e2b;--line:#293243;--text:#eef2f8;--muted:#9ca8ba;--accent:#a6f36a;--accent-ink:#17210d;--yellow:#f5cb69;--red:#ff8989;--blue:#9ac8ff;--radius:16px;font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color-scheme:dark}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(900px 500px at 80% -20%,#24324b 0%,transparent 65%),var(--bg);color:var(--text);font-size:14px}button,input,textarea{font:inherit}button{cursor:pointer;border:1px solid var(--line);background:var(--panel2);color:var(--text);border-radius:10px;padding:9px 12px;font-weight:650}button:hover{border-color:#5d6b83}button.primary{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}button.danger{color:var(--red)}button:disabled{opacity:.45;cursor:not-allowed}.app{min-height:100vh;display:grid;grid-template-columns:238px 1fr}.sidebar{border-right:1px solid var(--line);padding:22px 14px;background:#0c1018cc}.brand{display:flex;align-items:center;gap:10px;padding:0 8px 25px}.logo{width:36px;height:36px;border-radius:12px;display:grid;place-items:center;background:var(--accent);color:var(--accent-ink);font-size:19px;font-weight:900}.brand strong{display:block;font-size:14px}.brand small{display:block;color:var(--muted);margin-top:3px}.navlabel{font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:#77849a;padding:10px 10px 7px}.nav{width:100%;text-align:left;display:flex;gap:10px;align-items:center;background:transparent;border-color:transparent;color:#b5bfd0;margin:2px 0;font-weight:550}.nav.active{background:#1a2230;border-color:#2c394c;color:var(--text)}.nav span{width:20px;text-align:center;color:var(--muted)}.sidebar-note{margin:26px 6px 0;padding:13px;border:1px solid var(--line);border-radius:12px;background:#111722}.sidebar-note strong{font-size:12px}.sidebar-note p{font-size:11px;line-height:1.55;color:var(--muted);margin:7px 0 0}.main{padding:26px clamp(18px,4vw,52px) 50px;max-width:1400px;width:100%;margin:auto}.topbar{display:flex;justify-content:space-between;align-items:center;gap:16px;margin-bottom:28px}.eyebrow{color:var(--accent);text-transform:uppercase;letter-spacing:.13em;font-size:10px;font-weight:800}.topbar h1{font-size:clamp(24px,3vw,34px);letter-spacing:-.04em;margin:7px 0 5px}.subtitle{color:var(--muted);margin:0;line-height:1.5}.status-pill{white-space:nowrap;border:1px solid #5b4c26;background:#2b2517;color:var(--yellow);padding:8px 11px;border-radius:999px;font-size:11px;font-weight:750}.notice{border:1px solid #625126;background:#241f14;color:#f6d78b;border-radius:12px;padding:12px 14px;display:flex;gap:10px;align-items:flex-start;line-height:1.5;margin-bottom:20px}.notice strong{color:#fff0c2}.grid{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(280px,.7fr);gap:16px}.panel{background:linear-gradient(160deg,#151c28,#10151e);border:1px solid var(--line);border-radius:var(--radius);padding:20px;min-width:0}.panel-head{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;margin-bottom:17px}.panel h2{font-size:15px;margin:0 0 5px;letter-spacing:-.01em}.panel-head p{font-size:12px;color:var(--muted);margin:0;line-height:1.5}.tiny-badge{border:1px solid var(--line);color:var(--muted);border-radius:999px;padding:5px 8px;font-size:10px;white-space:nowrap}.textarea{width:100%;resize:vertical;min-height:122px;border:1px solid #344055;border-radius:12px;background:#0c111a;color:var(--text);padding:13px;line-height:1.55;outline:none}.textarea:focus,input:focus{border-color:var(--accent)}.formrow{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-top:12px}.hint{font-size:11px;color:var(--muted);line-height:1.5}.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:16px}.stat{border:1px solid var(--line);border-radius:13px;background:#121824;padding:14px}.stat span{display:block;color:var(--muted);font-size:11px}.stat strong{display:block;font-size:24px;letter-spacing:-.04em;margin-top:7px}.stat small{color:#8c99ad;font-size:10px}.flow{display:flex;align-items:center;gap:7px;flex-wrap:wrap;margin-top:15px}.flow span{border:1px solid var(--line);border-radius:8px;padding:7px 9px;font-size:10px;color:#c2cddd;background:#101620}.flow b{color:#728199;font-weight:500}.route-list{display:grid;gap:10px}.route{display:flex;gap:11px;align-items:flex-start;padding:12px;border:1px solid var(--line);border-radius:12px;background:#111722}.route-icon{width:34px;height:34px;display:grid;place-items:center;background:#202a3a;border-radius:10px;font-size:16px;flex-shrink:0}.route strong{font-size:12px;display:block}.route p{font-size:11px;color:var(--muted);line-height:1.5;margin:4px 0 0}.section-title{display:flex;justify-content:space-between;align-items:center;margin:27px 0 13px}.section-title h2{font-size:17px;margin:0}.section-title p{color:var(--muted);font-size:11px;margin:4px 0 0}.cards{display:grid;gap:11px}.empty{border:1px dashed #354154;border-radius:13px;padding:25px;text-align:center;color:var(--muted);line-height:1.6}.empty strong{display:block;color:#dce3ed;margin-bottom:4px}.request-card{border:1px solid var(--line);border-radius:14px;padding:15px;background:#121823}.request-top{display:flex;justify-content:space-between;align-items:flex-start;gap:12px}.request-title{font-size:13px;font-weight:750;line-height:1.45}.meta{display:flex;flex-wrap:wrap;gap:6px;margin:9px 0}.tag{font-size:10px;padding:4px 7px;border-radius:6px;border:1px solid var(--line);color:#aebbd0}.tag.status{color:var(--yellow);border-color:#5b4c26;background:#2a2418}.tag.ok{color:var(--accent);border-color:#35552b;background:#172317}.tag.fail{color:var(--red);border-color:#5a3035;background:#28181c}.request-desc{color:#bac5d5;line-height:1.6;font-size:12px;margin:9px 0}.proposal{padding:10px 11px;border-radius:9px;background:#0d121a;border:1px solid #283345;color:#9eacc0;font-size:11px;line-height:1.6}.proposal strong{color:#e4eaf3}.actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}.actions button{font-size:11px;padding:8px 10px}.risk{font-size:10px;font-weight:800;letter-spacing:.05em;text-transform:uppercase}.risk.low{color:var(--accent)}.risk.medium{color:var(--yellow)}.risk.high{color:var(--red)}.log{display:grid;gap:8px}.log-row{display:grid;grid-template-columns:72px 1fr;gap:12px;padding:11px 0;border-bottom:1px solid #242e3e}.log-row:last-child{border-bottom:0}.log-time{color:#75839a;font-size:10px}.log-row strong{font-size:11px;display:block}.log-row p{font-size:11px;color:var(--muted);margin:4px 0 0;line-height:1.5}.view{display:none}.view.active{display:block}.settings-list{display:grid;gap:12px}.setting{display:flex;justify-content:space-between;gap:18px;padding:14px;border:1px solid var(--line);border-radius:12px}.setting p{margin:5px 0 0;color:var(--muted);font-size:12px;line-height:1.5}.setting strong{font-size:12px}.disabled-chip{color:var(--red);font-size:10px;border:1px solid #5a3035;padding:5px 8px;border-radius:99px;height:max-content;white-space:nowrap}.footer{color:#66748a;font-size:10px;margin-top:28px;line-height:1.6}.mobile-menu{display:none}.field-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.field{display:grid;gap:6px}.field label{font-size:11px;color:var(--muted)}.field input,.field select{width:100%;border:1px solid #344055;border-radius:10px;background:#0c111a;color:var(--text);padding:10px}.field-checks{display:flex;gap:16px;flex-wrap:wrap;margin-top:12px}.field-checks label{font-size:12px;color:#c4cedd;display:flex;gap:7px;align-items:center}.task-item{border:1px solid var(--line);border-radius:12px;padding:13px;background:#111722}.task-item-head{display:flex;justify-content:space-between;gap:12px;align-items:flex-start}.task-item-title{font-weight:750;line-height:1.4}.score{border:1px solid #35552b;background:#172317;color:var(--accent);padding:5px 8px;border-radius:8px;font-size:11px;white-space:nowrap}.task-meta{display:flex;gap:6px;flex-wrap:wrap;margin:8px 0}.task-meta span{font-size:10px;color:#aebbd0;border:1px solid var(--line);border-radius:6px;padding:4px 7px}.task-item p{font-size:11px;color:var(--muted);line-height:1.5;margin:7px 0}.task-item button{font-size:10px;padding:6px 8px}.task-layout{display:grid;grid-template-columns:minmax(0,1fr) minmax(280px,.85fr);gap:16px}.plan-stat{display:flex;justify-content:space-between;gap:12px;padding:12px;border-bottom:1px solid var(--line)}.plan-stat:last-child{border-bottom:0}.plan-stat span{font-size:11px;color:var(--muted)}.plan-stat strong{font-size:12px}.rank-reason{font-size:11px;color:#a9b7ca;line-height:1.5;margin-top:8px}@media(max-width:900px){.task-layout{grid-template-columns:1fr}}@media(max-width:480px){.field-grid{grid-template-columns:1fr}}
+@media(max-width:900px){.app{grid-template-columns:1fr}.sidebar{display:none}.main{padding:20px 15px 40px}.grid{grid-template-columns:1fr}.stats{grid-template-columns:repeat(3,minmax(0,1fr))}.stat{padding:11px}.stat strong{font-size:21px}.topbar{align-items:flex-start}.status-pill{font-size:10px}.mobile-menu{display:inline-flex}.panel{padding:16px}}
+@media(max-width:480px){.topbar{display:block}.status-pill{display:inline-block;margin-top:12px}.formrow{align-items:flex-start;flex-direction:column}.formrow button{width:100%}.stats{gap:6px}.stat strong{font-size:18px}.stat span{font-size:10px}.request-top{display:block}.risk{display:inline-block;margin-top:8px}}
+
+.mobile-nav{display:none}
+.mobile-tab{border:0;background:transparent;color:var(--muted);padding:7px 2px;min-height:48px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;font-size:10px;line-height:1.1}
+.mobile-tab .tab-icon{font-size:19px;line-height:1}
+.mobile-tab.active{color:var(--accent);background:#1a2230;border-radius:10px}
+.mobile-more-menu{display:none}
+.mobile-more-menu.open{display:grid;position:fixed;z-index:100;bottom:calc(78px + env(safe-area-inset-bottom));right:12px;width:min(240px,calc(100vw - 24px));gap:5px;padding:8px;border:1px solid var(--line);border-radius:14px;background:#151c28;box-shadow:0 12px 32px #0008}
+.mobile-more-menu button{width:100%;text-align:left;border:0;background:transparent;padding:12px;font-size:13px}
+@media(max-width:900px){
+ body{padding-bottom:calc(76px + env(safe-area-inset-bottom))}
+ .main{padding-bottom:calc(96px + env(safe-area-inset-bottom))}
+ .mobile-nav{position:fixed;z-index:90;left:0;right:0;bottom:0;display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:2px;padding:7px 8px calc(7px + env(safe-area-inset-bottom));background:#0c1018f5;backdrop-filter:blur(18px);border-top:1px solid var(--line)}
+ .mobile-tab{min-width:0}
+ .status-pill{white-space:normal;max-width:100%}
+}
 </style>
 </head>
 <body>
-<header><div class="eyebrow">Personal operating system</div><h1 id="pageTitle">Today, with intention.</h1><p id="subtitle">One clear priority at a time.</p></header>
-<main class="wrap">
-<section id="homeView">
-<div class="statgrid"><div class="stat"><div class="num" id="openCount">0</div><div class="label">Open tasks</div></div><div class="stat"><div class="num" id="doneCount">0</div><div class="label">Completed</div></div></div>
-<div class="card"><h2>Today's focus</h2><div id="focusList" class="empty">Add your first task to get started.</div></div>
-<div class="card"><div class="row"><h2>Quick capture</h2><span class="pill">LOCAL</span></div><label for="quickTitle">What needs your attention?</label><input id="quickTitle" maxlength="180" placeholder="e.g. Finish coaching client program"><button class="primary full" id="quickAdd">Add task</button><p class="note">Saved on this iPhone/browser only. Not connected to Notion yet.</p></div>
-</section>
-<section id="planView" class="hidden"><div class="card"><h2>Daily plan</h2><p>Priorities use deadline, impact, and estimated effort. Choose realistic time for today.</p><label for="capacity">Available focus time (minutes)</label><input id="capacity" type="number" min="15" max="720" value="120"><div id="planList" style="margin-top:12px"></div></div></section>
-<section id="intakeView" class="hidden"><div class="card"><h2>New task</h2><form id="taskForm"><label for="title">Task name</label><input id="title" required maxlength="180" placeholder="What must be done?"><label for="area">Area</label><select id="area"><option>Personal Work OS</option><option>Fitness Coaching</option><option>School</option><option>Content & Personal Brand</option><option>Business</option><option>Personal</option></select><label for="due">Deadline (optional)</label><input id="due" type="date"><label for="impact">Strategic impact</label><select id="impact"><option value="3">High</option><option value="2" selected>Medium</option><option value="1">Low</option></select><label for="minutes">Estimated minutes</label><input id="minutes" type="number" min="5" max="720" value="30"><label for="dependency">Blocked by something?</label><input id="dependency" maxlength="180" placeholder="Optional dependency"><button class="primary full" type="submit">Save task</button></form></div></section>
-<section id="queueView" class="hidden"><div class="card"><div class="row"><h2>Task queue</h2><span class="pill" id="queueBadge">0 tasks</span></div><div id="queueList"></div></div></section>
+<div class="app">
+<aside class="sidebar">
+  <div class="brand"><div class="logo">✳</div><div><strong>Personal Agent</strong><small>Work OS · MVP</small></div></div>
+  <div class="navlabel">Workspace</div>
+  <button class="nav active" data-view="overview"><span>◫</span> Overview</button>
+  <button class="nav" data-view="intake"><span>＋</span> Request intake</button>
+  <button class="nav" data-view="planning"><span>↗</span> Priority & daily plan</button>
+  <button class="nav" data-view="approvals"><span>✓</span> Approval queue <b id="navCount" style="margin-left:auto;font-size:10px;color:var(--yellow)">0</b></button>
+  <button class="nav" data-view="activity"><span>≡</span> Activity log</button>
+  <div class="navlabel" style="margin-top:18px">System</div>
+  <button class="nav" data-view="settings"><span>⚙</span> Connections & safety</button>
+  <div class="sidebar-note"><strong>Approval-first mode</strong><p>Nothing is sent to Notion or another service from this prototype. A live connector must be implemented and verified first.</p></div>
+</aside>
+<main class="main">
+  <header class="topbar"><div><div class="eyebrow">Your operating system</div><h1 id="pageTitle">Good morning. Let's get organized.</h1><p class="subtitle" id="pageSubtitle">Capture a request. Review the plan. Approve before any consequential action.</p></div><div class="status-pill">● SAFE MODE · LOCAL PROTOTYPE</div></header>
+  <div class="notice"><span>⚠</span><div><strong>Prototype only — no live AI or Notion writes.</strong> Routing is rule-based for demonstration. Approval and execution controls below simulate the safety workflow; they do not change your Notion workspace.</div></div>
+  <section class="view active" id="view-overview">
+    <div class="stats"><div class="stat"><span>Awaiting approval</span><strong id="statPending">0</strong><small>Needs your decision</small></div><div class="stat"><span>Approved</span><strong id="statApproved">0</strong><small>Not executed</small></div><div class="stat"><span>Verified writes</span><strong>0</strong><small>Live connector disabled</small></div></div>
+    <div class="grid">
+      <div class="panel"><div class="panel-head"><div><h2>Send a request</h2><p>Describe what you want your agent to do.</p></div><span class="tiny-badge">01 · CAPTURE</span></div><textarea id="requestInput" class="textarea" placeholder="Example: Plan next week's content around my college deadlines and coaching sessions, then suggest tasks for my review."></textarea><div class="formrow"><span class="hint">The prototype will classify the request and prepare a review card.</span><button class="primary" id="prepareBtn">Prepare proposal ↗</button></div><div class="flow"><span>Capture</span><b>→</b><span>Route</span><b>→</b><span>Approval</span><b>→</b><span>Execution</span><b>→</b><span>Verification</span></div></div>
+      <div class="panel"><div class="panel-head"><div><h2>Routing map</h2><p>Existing source-of-truth destinations.</p></div><span class="tiny-badge">02 · ROUTE</span></div><div class="route-list"><div class="route"><div class="route-icon">✓</div><div><strong>Tasks Tracker</strong><p>Tasks, deadlines, priorities, status. Existing Notion database remains authoritative.</p></div></div><div class="route"><div class="route-icon">🎯</div><div><strong>Strategy & Scorecard</strong><p>Goals, milestones, KPIs and strategic trade-offs.</p></div></div><div class="route"><div class="route-icon">◫</div><div><strong>Personal Work OS</strong><p>Routines, operating rules and durable process notes.</p></div></div><div class="route"><div class="route-icon">⇄</div><div><strong>Planning & Coordination</strong><p>Multi-area plans, dependencies and cross-domain requests.</p></div></div><div class="route"><div class="route-icon">🔎</div><div><strong>Review & Data Quality</strong><p>Audits, duplicate checks, verification and data integrity.</p></div></div><div class="route"><div class="route-icon">💬</div><div><strong>Answer-only / clarify</strong><p>Questions stay answer-only; unclear requests go to the dispatcher rather than becoming tasks by default.</p></div></div></div></div>
+    </div>
+    <div class="section-title"><div><h2>Approval queue</h2><p>Proposed actions stay here until you review them.</p></div><button data-view="approvals">View queue →</button></div><div class="cards" id="overviewCards"></div>
+  </section>
+  <section class="view" id="view-intake"><div class="panel"><div class="panel-head"><div><h2>Request intake</h2><p>State the outcome, not just the steps. The agent proposes a route and action envelope.</p></div><span class="tiny-badge">01 · CAPTURE</span></div><textarea id="requestInput2" class="textarea" style="min-height:180px" placeholder="What do you want to accomplish? Include a deadline or constraints if they matter."></textarea><div class="formrow"><span class="hint">No task or strategy records will be created by this prototype.</span><button class="primary" id="prepareBtn2">Prepare proposal ↗</button></div></div></section>
+  <section class="view" id="view-planning">
+    <div class="notice"><span>ℹ</span><div><strong>Local planning sandbox.</strong> Tasks added here are stored only in this browser. They are not synced to Notion and do not create a second official Task Tracker. Use this to validate the prioritization logic before integration.</div></div>
+    <div class="task-layout">
+      <div class="panel">
+        <div class="panel-head"><div><h2>Add a planning task</h2><p>Capture the next action and enough context to rank it.</p></div><span class="tiny-badge">TASK INTAKE</span></div>
+        <form id="taskForm">
+          <div class="field"><label for="taskTitle">Task</label><input id="taskTitle" maxlength="180" required placeholder="e.g. Finish entrepreneurship assignment" /></div>
+          <div class="field-grid" style="margin-top:12px">
+            <div class="field"><label for="taskDue">Due date (optional)</label><input id="taskDue" type="date" /></div>
+            <div class="field"><label for="taskImpact">Strategic impact</label><select id="taskImpact"><option value="5">5 · Critical</option><option value="4" selected>4 · High</option><option value="3">3 · Medium</option><option value="2">2 · Low</option><option value="1">1 · Minimal</option></select></div>
+            <div class="field"><label for="taskEffort">Estimated effort</label><select id="taskEffort"><option value="15">15 minutes</option><option value="30">30 minutes</option><option value="45">45 minutes</option><option value="60" selected>1 hour</option><option value="90">1.5 hours</option><option value="120">2 hours</option><option value="180">3 hours</option><option value="240">4 hours</option></select></div>
+            <div class="field"><label for="planCapacity">Today's available focus time</label><select id="planCapacity"><option value="60">1 hour</option><option value="120">2 hours</option><option value="180" selected>3 hours</option><option value="240">4 hours</option><option value="360">6 hours</option><option value="480">8 hours</option></select></div>
+          </div>
+          <div class="field-checks"><label><input id="taskBlocked" type="checkbox" /> Blocked by a dependency</label><label><input id="taskUnblocks" type="checkbox" /> Unblocks another task</label></div>
+          <div class="formrow"><span class="hint">Priority is a transparent heuristic, not an AI prediction.</span><button class="primary" type="submit">Add to local plan</button></div>
+        </form>
+      </div>
+      <div class="panel"><div class="panel-head"><div><h2>Today's plan</h2><p>Suggested order based on deadline, impact, dependencies, age, and effort fit.</p></div><span class="tiny-badge">DAILY PLAN</span></div><div class="plan-stat"><span>Tasks selected</span><strong id="planSelected">0</strong></div><div class="plan-stat"><span>Planned focus time</span><strong id="planTime">0 min</strong></div><div class="plan-stat"><span>Capacity remaining</span><strong id="planRemaining">180 min</strong></div><div class="plan-stat"><span>Blocked tasks excluded</span><strong id="planBlocked">0</strong></div><p class="hint" style="margin-top:12px">Hard overdue/today deadlines receive urgency priority. Blocked tasks are shown separately instead of being scheduled as executable work. You can mark tasks done or remove them.</p></div>
+    </div>
+    <div class="section-title"><div><h2>Recommended next actions</h2><p id="planSummary">Add tasks to build a ranked plan.</p></div><button id="clearCompletedTasks">Clear completed</button></div><div class="cards" id="dailyPlanCards"></div>
+    <div class="section-title"><div><h2>Blocked & later</h2><p>Tasks not selected for today's available focus window.</p></div></div><div class="cards" id="laterPlanCards"></div>
+  </section>
+  <section class="view" id="view-approvals"><div class="section-title" style="margin-top:0"><div><h2>Review proposals</h2><p>Approval applies only to the exact proposal shown.</p></div><span class="tiny-badge">03 · HUMAN CONTROL</span></div><div class="cards" id="approvalCards"></div></section>
+  <section class="view" id="view-activity"><div class="panel"><div class="panel-head"><div><h2>Activity log</h2><p>Saved locally in this browser. Export a backup before clearing browser data. Restoring a backup replaces current local data and resets approvals for safety.</p></div><div style="display:flex;gap:8px;flex-wrap:wrap"><button id="exportBtn">Export backup</button><button id="importBtn">Restore backup</button><input id="importFile" type="file" accept="application/json,.json" hidden><button id="clearLogBtn">Clear log</button></div></div><div class="log" id="activityLog"></div></div></section>
+  <section class="view" id="view-settings"><div class="panel"><div class="panel-head"><div><h2>Connections & safety</h2><p>Current implementation status. No integration is assumed to be live.</p></div><span class="tiny-badge">SYSTEM</span></div><div class="settings-list"><div class="setting"><div><strong>Notion read/write connector</strong><p>Not connected in this standalone prototype. Live writes require a server-side connector, scoped credentials, duplicate checks and read-after-write verification.</p></div><span class="disabled-chip">NOT CONNECTED</span></div><div class="setting"><div><strong>AI model provider</strong><p>Rule-based demo routing only. A production AI provider and server-side key management must be configured before model-backed planning is enabled.</p></div><span class="disabled-chip">NOT CONNECTED</span></div><div class="setting"><div><strong>Approval gate</strong><p>Every proposal starts awaiting approval. Changing the proposal invalidates prior approval. Execution is still blocked without a verified connector.</p></div><span class="tag ok">ENFORCED IN DEMO</span></div><div class="setting"><div><strong>Background automation</strong><p>No scheduler, event trigger, retries or background execution are configured by this prototype.</p></div><span class="disabled-chip">DISABLED</span></div><div class="setting"><div><strong>Data storage</strong><p>Request proposals and activity logs are saved in this browser using local storage. They do not sync across devices. Export a JSON backup regularly. Do not enter passwords, API keys, or sensitive client information.</p></div><span class="tag ok">LOCAL ONLY</span></div></div></div></section>
+  <div class="footer">PERSONAL AGENT · APPROVAL-FIRST MVP · This local prototype saves proposals and logs only in this browser. It is not connected to Notion, an AI provider, or background automation. Export backups regularly. Do not enter passwords, API keys, or sensitive client information.</div>
 </main>
-<nav class="nav" aria-label="Primary navigation"><button data-view="home" class="active"><span class="ico">⌂</span>Home</button><button data-view="plan"><span class="ico">◷</span>Plan</button><button data-view="intake"><span class="ico">＋</span>Capture</button><button data-view="queue"><span class="ico">☷</span>Tasks</button></nav>
+</div>
+<nav class="mobile-nav" aria-label="Primary navigation">
+  <button type="button" class="mobile-tab active" data-view="overview" aria-label="Overview"><span class="tab-icon" aria-hidden="true">⌂</span><span>Home</span></button>
+  <button type="button" class="mobile-tab" data-view="planning" aria-label="Priority and daily plan"><span class="tab-icon" aria-hidden="true">✓</span><span>Plan</span></button>
+  <button type="button" class="mobile-tab" data-view="intake" aria-label="Request intake"><span class="tab-icon" aria-hidden="true">＋</span><span>Intake</span></button>
+  <button type="button" class="mobile-tab" data-view="approvals" aria-label="Approval queue"><span class="tab-icon" aria-hidden="true">▤</span><span>Queue</span></button>
+  <button type="button" class="mobile-tab" id="mobileMoreTab" aria-expanded="false" aria-controls="mobileMoreMenu"><span class="tab-icon" aria-hidden="true">•••</span><span>More</span></button>
+</nav>
+<div class="mobile-more-menu" id="mobileMoreMenu" role="menu" aria-label="More views">
+  <button type="button" data-view="activity" role="menuitem">≡ &nbsp; Activity log</button>
+  <button type="button" data-view="settings" role="menuitem">⚙ &nbsp; Connections & safety</button>
+  <button type="button" id="installHelpBtn" role="menuitem">↗ &nbsp; Add to Home Screen help</button>
+</div>
 <script>
-(function(){
-const KEY='personal-work-os-phone-v1';
-const $=id=>document.getElementById(id);
-let tasks=[];
-try{const stored=localStorage.getItem(KEY);tasks=stored?JSON.parse(stored):[]}catch(e){tasks=[]}
-if(!Array.isArray(tasks))tasks=[];
-function save(){try{localStorage.setItem(KEY,JSON.stringify(tasks));render()}catch(e){alert('Could not save locally. Check available iPhone storage or private browsing settings.');}}
-function score(t){let s={High:30,Medium:20,Low:10}[t.impactLabel]||20;if(t.due){let d=(new Date(t.due+'T23:59:59').getTime()-Date.now())/86400000;s+=d<0?45:d<1?40:d<3?30:d<7?20:5;}if(t.dependency)s-=25;let age=(Date.now()-t.created)/86400000;s+=Math.min(15,Math.max(0,age));return Math.max(0,Math.min(100,s))}
-function sorted(){return tasks.filter(t=>!t.done).sort((a,b)=>score(b)-score(a))}
-function esc(s){return String(s||'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
-function item(t){return '<div class="task"><div class="row"><div class="tasktitle">'+esc(t.title)+'</div><span class="score">'+Math.round(score(t))+'</span></div><div class="meta">'+esc(t.area)+' · '+Number(t.minutes||30)+' min'+(t.due?' · due '+esc(t.due):'')+(t.dependency?' · blocked: '+esc(t.dependency):'')+'</div><div class="row" style="justify-content:flex-start;margin-top:8px"><button class="secondary" data-done="'+t.id+'">'+(t.done?'Reopen':'Complete')+'</button><button class="danger" data-delete="'+t.id+'">Delete</button></div></div>'}
-function render(){let open=tasks.filter(t=>!t.done);$('openCount').textContent=open.length;$('doneCount').textContent=tasks.filter(t=>t.done).length;$('focusList').innerHTML=sorted().filter(t=>!t.dependency).slice(0,3).map(item).join('')||'<div class="empty">No unblocked tasks. Capture a task or review blocked work.</div>';$('queueBadge').textContent=tasks.length+' tasks';$('queueList').innerHTML=tasks.length?tasks.slice().sort((a,b)=>Number(a.done)-Number(b.done)||score(b)-score(a)).map(item).join(''):'<div class="empty">Your task queue is empty.</div>';let cap=Math.max(15,Number($('capacity').value)||120),used=0,planned=[];for(const t of sorted()){if(t.dependency)continue;let m=Number(t.minutes)||30;if(used+m<=cap){planned.push(t);used+=m}}$('planList').innerHTML='<p>'+used+' / '+cap+' minutes allocated</p>'+(planned.map(item).join('')||'<div class="empty">No tasks fit your available time.</div>')}
-function addTask(title,details={}){const clean=String(title||'').trim();if(!clean)return;tasks.push({id:Date.now().toString(36)+Math.random().toString(36).slice(2,6),title:clean,area:details.area||'Personal Work OS',due:details.due||'',impactLabel:details.impactLabel||'Medium',minutes:Math.min(720,Math.max(5,Number(details.minutes)||30)),dependency:details.dependency||'',created:Date.now(),done:false});save()}
-function show(view){document.querySelectorAll('main section').forEach(el=>el.classList.add('hidden'));$(view+'View').classList.remove('hidden');document.querySelectorAll('.nav button').forEach(b=>b.classList.toggle('active',b.dataset.view===view));const names={home:['Today, with intention.','One clear priority at a time.'],plan:['Daily plan','Make today realistic.'],intake:['Capture a task','Get it out of your head and into your system.'],queue:['Your task queue','Review, complete, or reprioritize.']};$('pageTitle').textContent=names[view][0];$('subtitle').textContent=names[view][1];render()}
-document.querySelectorAll('.nav button').forEach(b=>b.addEventListener('click',()=>show(b.dataset.view)));
-$('quickAdd').addEventListener('click',()=>{addTask($('quickTitle').value);$('quickTitle').value=''});
-$('quickTitle').addEventListener('keydown',e=>{if(e.key==='Enter'){$('quickAdd').click()}});
-$('taskForm').addEventListener('submit',e=>{e.preventDefault();addTask($('title').value,{area:$('area').value,due:$('due').value,impactLabel:$('impact').selectedOptions[0].textContent,minutes:$('minutes').value,dependency:$('dependency').value});e.target.reset();$('minutes').value=30;show('queue')});
-$('capacity').addEventListener('input',render);
-document.addEventListener('click',e=>{let d=e.target.closest('[data-done]'),x=e.target.closest('[data-delete]');if(d){const t=tasks.find(t=>t.id===d.dataset.done);if(t){t.done=!t.done;save()}}if(x){tasks=tasks.filter(t=>t.id!==x.dataset.delete);save()}});
-render();
+(() => {
+  const STORAGE_KEY = 'personal-work-os-agent:v1';
+  const MAX_BACKUP_BYTES = 2 * 1024 * 1024;
+  const MAX_REQUESTS = 500;
+  const MAX_LOGS = 500;
+  const state = { requests: [], logs: [] };
+  const destinationMap = {
+    strategy:{name:"12-Month Strategy & Scorecard",area:"Strategy",url:"https://app.notion.com/p/3fb4bebde186812b993cc56ee425ebd3"},
+    personal:{name:"Personal Work OS",area:"Personal",url:"https://app.notion.com/p/3f94bebde18681a78e2ee513cbec2e70"},
+    tasks:{name:"Tasks Tracker",area:"Task execution",url:"https://app.notion.com/p/1fd4bebde18680088db5ecd3c96da876"},
+    planning:{name:"Planning & Coordination",area:"Cross-domain",url:"https://app.notion.com/p/3fb4bebde18681288711e8319543c71f"},
+    quality:{name:"Review & Data Quality Agent",area:"Quality review",url:"https://app.notion.com/p/3fb4bebde186819bbe32ecf04c0a7809"},
+    answer:{name:"Answer only · no Notion write",area:"Answer only",url:""},
+    dispatcher:{name:"Central Dispatcher · clarify intent",area:"Needs classification",url:"https://app.notion.com/p/3fb4bebde18681feb748d685c54d0b52"}
+  };
+  const validStatuses = new Set(["Awaiting approval","Approved · execution not started","Rejected","Blocked · connector not configured"]);
+  function normalizeRequest(r, restoring=false){
+    if(!r || typeof r !== 'object' || typeof r.text !== 'string' || !r.text.trim() || r.text.length > 5000) return null;
+    const kind = Object.hasOwn(destinationMap, r.kind) ? r.kind : route(r.text);
+    const dest = destinationMap[kind];
+    const status = restoring ? (r.status === 'Rejected' ? 'Rejected' : 'Awaiting approval') : (validStatuses.has(r.status) ? r.status : 'Awaiting approval');
+    const id = typeof r.id === 'string' && r.id.length > 0 && r.id.length <= 120 ? r.id : (crypto.randomUUID ? crypto.randomUUID() : String(Date.now()) + Math.random());
+    const created = typeof r.created === 'string' && !Number.isNaN(Date.parse(r.created)) ? new Date(r.created).toISOString() : new Date().toISOString();
+    const normalized = {id,text:r.text.trim(),kind,destination:dest.name,url:dest.url,area:dest.area,risk:risk(r.text,kind),status,approvedSnapshot:null,created,proposalVersion:Number.isInteger(r.proposalVersion)&&r.proposalVersion>0&&r.proposalVersion<1000000?r.proposalVersion:1};
+    const exactSnapshot = JSON.stringify({text:normalized.text,kind:normalized.kind,destination:normalized.destination,risk:normalized.risk,proposalVersion:normalized.proposalVersion});
+    if(!restoring && status === 'Approved · execution not started' && typeof r.approvedSnapshot === 'string' && r.approvedSnapshot === exactSnapshot) normalized.approvedSnapshot = exactSnapshot;
+    else if(!restoring && status === 'Approved · execution not started') normalized.status = 'Awaiting approval';
+    return normalized;
+  }
+  function normalizeLog(x){
+    if(!x || typeof x !== 'object' || typeof x.title !== 'string' || typeof x.detail !== 'string' || typeof x.time !== 'string') return null;
+    return {time:x.time.slice(0,80),title:x.title.slice(0,160),detail:x.detail.slice(0,1000)};
+  }
+  function parseBackupObject(parsed){
+    if(!parsed || parsed.format!=='personal-work-os-local-backup' || parsed.version!==1 || !Array.isArray(parsed.requests) || !Array.isArray(parsed.logs)) throw new Error('This is not a supported Personal Work OS backup.');
+    if(parsed.requests.length>MAX_REQUESTS || parsed.logs.length>MAX_LOGS) throw new Error(`Backup exceeds the limit of ${MAX_REQUESTS} requests or ${MAX_LOGS} activity entries.`);
+    const requests = parsed.requests.map(r=>normalizeRequest(r,true));
+    const logs = parsed.logs.map(normalizeLog);
+    if(requests.some(r=>!r) || logs.some(x=>!x)) throw new Error('The backup contains invalid or incomplete records. No data was changed.');
+    return {requests,logs};
+  }
+  function restoreState(){
+    try {
+      const raw = localStorage.getItem(STORAGE_KEY);
+      if (!raw) return;
+      if(raw.length > MAX_BACKUP_BYTES * 2) throw new Error('Saved local workspace is unexpectedly large. Export or clear it from the browser storage settings.');
+      const saved = JSON.parse(raw);
+      if (saved && saved.version === 1 && Array.isArray(saved.requests) && Array.isArray(saved.logs)) {
+        state.requests = saved.requests.slice(0,MAX_REQUESTS).map(r=>normalizeRequest(r)).filter(Boolean);
+        state.logs = saved.logs.slice(0,MAX_LOGS).map(normalizeLog).filter(Boolean);
+      }
+    } catch (error) { console.warn('Local workspace data could not be restored.', error); }
+  }
+  function persistState(){
+    try { localStorage.setItem(STORAGE_KEY, JSON.stringify({version:1, requests:state.requests.slice(0,MAX_REQUESTS), logs:state.logs.slice(0,MAX_LOGS)})); }
+    catch (error) { console.warn('Local workspace data could not be saved. Export a backup and check browser storage.', error); }
+  }
+  function exportBackup(){
+    const payload = {format:'personal-work-os-local-backup', version:1, exportedAt:new Date().toISOString(), requests:state.requests, logs:state.logs};
+    const blob = new Blob([JSON.stringify(payload, null, 2)], {type:'application/json'});
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a'); a.href = url; a.download = `personal-work-os-backup-${new Date().toISOString().slice(0,10)}.json`;
+    document.body.appendChild(a); a.click(); a.remove(); setTimeout(()=>URL.revokeObjectURL(url),1000);
+    log('Backup exported', 'A JSON backup of local proposals and activity logs was generated. Store it somewhere private.');
+  }
+  async function importBackup(file){
+    if(!file) return;
+    if(file.size > MAX_BACKUP_BYTES){alert('Backup rejected: the file must be 2 MB or smaller.');return;}
+    try{
+      const parsed = JSON.parse(await file.text());
+      const {requests,logs} = parseBackupObject(parsed);
+      if(!confirm(`Restore ${requests.length} proposals and ${logs.length} activity entries? This REPLACES the current local data. All non-rejected proposals will return to Awaiting approval; prior approvals will not be restored.`)) return;
+      state.requests = requests;
+      state.logs = logs;
+      persistState();
+      log('Backup restored', `${requests.length} proposals and ${logs.length} prior activity entries imported. Approval states were reset for safety.`);
+      render();
+      alert('Backup restored. Review proposals again before taking any action.');
+    }catch(error){alert(`Could not restore backup: ${error.message || 'Invalid JSON file'}`);}
+    finally{$('importFile').value='';}
+  }
+  const titles = {planning:["Priority & daily plan","Turn the task backlog into a realistic next-action shortlist."],overview:["Good morning. Let's get organized.","Capture a request. Review the plan. Approve before any consequential action."],intake:["What should we work on?","Describe the outcome and constraints. The agent will prepare a proposal for review."],approvals:["Your approval queue","Review each proposed action before it can move forward."],activity:["Activity log","See what this prototype has done during the current session."],settings:["Connections & safety","Know what is connected, what is disabled, and where approval is required."]};
+  const $ = id => document.getElementById(id);
+  const safe = s => String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  function route(text){
+    const t=String(text||"").trim().toLowerCase();
+    if(!t)return "dispatcher";
+    if(/\b(audit|quality control|data quality|verify|verification|check for duplicates|integrity check|inspect permissions)\b/.test(t))return "quality";
+    if(/\b(strategy|annual goal|kpi|scorecard|milestone|revenue target|12.month|strategic goal|quarterly objective)\b/.test(t))return "strategy";
+    if(/\b(routine|personal work os|work.?school balance|process note|weekly reset|daily top three|operating rule)\b/.test(t))return "personal";
+    if(/\b(plan|coordinate|across|multi.?step|dependencies|four.week|next week|weekly plan|combine|sequence)\b/.test(t)||/content.*(college|coaching)|(college|coaching).*content/.test(t))return "planning";
+    if(/^(what|why|how|who|when|where|which|explain|define|compare|brainstorm|give me ideas|suggest)\b/.test(t)&&!(/\b(create|add|update|change|track|schedule|publish|send|delete|complete|mark|record|save|build|implement|execute)\b/.test(t)))return "answer";
+    if(/\b(task|todo|to-do|reminder|deadline|due date|priority|status|next action|create|add|update|mark done|complete|follow.?up|assignment)\b/.test(t))return "tasks";
+    return "dispatcher";
+  }
+  function risk(text,kind){const t=text.toLowerCase();if(/delete|remove|share|permission|send email|publish|payment|purchase|bulk|overwrite|cancel/.test(t))return "high";if(kind==="tasks"||kind==="planning"||kind==="dispatcher"||kind==="quality")return "medium";return "low";}
+  function log(title,detail){state.logs.unshift({time:new Date().toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'}),title,detail});persistState();renderLog();}
+  function makeRequest(text){const cleaned=text.trim();if(!cleaned)return;const kind=route(cleaned);const dest=destinationMap[kind];const r={id:crypto.randomUUID?crypto.randomUUID():String(Date.now())+Math.random(),text:cleaned,kind,destination:dest.name,url:dest.url,area:dest.area,risk:risk(cleaned,kind),status:"Awaiting approval",approvedSnapshot:null,created:new Date().toISOString(),proposalVersion:1};state.requests.unshift(r);log("Proposal prepared",`Routed to ${dest.name}. No external action performed.`);render();showView("approvals");}
+  function approve(id){const r=state.requests.find(x=>x.id===id);if(!r||r.status!=="Awaiting approval")return;r.approvedSnapshot=JSON.stringify({text:r.text,kind:r.kind,destination:r.destination,risk:r.risk,proposalVersion:r.proposalVersion});r.status="Approved · execution not started";log("Proposal approved",`${r.destination}. Approval does not execute the action.`);render();}
+  function reject(id){const r=state.requests.find(x=>x.id===id);if(!r)return;r.status="Rejected";r.approvedSnapshot=null;log("Proposal rejected",`${r.destination}. No external action performed.`);render();}
+  function execute(id){const r=state.requests.find(x=>x.id===id);if(!r)return;const current=JSON.stringify({text:r.text,kind:r.kind,destination:r.destination,risk:r.risk,proposalVersion:r.proposalVersion});if(r.status!=="Approved · execution not started"||r.approvedSnapshot!==current){r.status="Awaiting approval";r.approvedSnapshot=null;log("Approval invalidated","The proposal changed or was not approved. Review again.");render();return;}r.status="Blocked · connector not configured";log("Execution blocked","Notion connector is not configured. No write was attempted or simulated as successful.");render();}
+  function editTitle(id,value){const r=state.requests.find(x=>x.id===id);if(!r)return;r.text=value;r.proposalVersion++;if(r.approvedSnapshot){r.approvedSnapshot=null;r.status="Awaiting approval";log("Approval reset","Proposal changed after approval; renewed approval is required.");}render();}
+  function card(r){const statusClass=r.status.startsWith("Approved")?"ok":r.status.startsWith("Blocked")||r.status==="Rejected"?"fail":"status";const riskClass=r.risk;return `<article class="request-card"><div class="request-top"><div class="request-title">${safe(r.text.slice(0,130))}${r.text.length>130?"…":""}</div><span class="risk ${riskClass}">${safe(r.risk)} risk</span></div><div class="meta"><span class="tag">${safe(r.area)}</span><span class="tag">Destination: ${safe(r.destination)}</span><span class="tag ${statusClass}">${safe(r.status)}</span></div><p class="request-desc">${r.status.startsWith("Blocked")?"Execution is blocked because no live connector is configured. This is an honest blocker, not a successful write.":"Proposed request. Review the destination and scope before approving."}</p><div class="proposal"><strong>Action envelope</strong><br>Intent: ${safe(r.text)}<br>Destination: ${r.url?`<a style="color:#9ac8ff" href="${safe(r.url)}" target="_blank" rel="noreferrer">${safe(r.destination)}</a>`:safe(r.destination)}<br>Approval required: yes · Execution: not connected</div><div style="margin-top:12px"><label class="hint" for="edit-${safe(r.id)}">Editable proposal text (changing this resets approval)</label><textarea class="textarea" id="edit-${safe(r.id)}" style="min-height:60px;margin-top:6px" data-edit="${safe(r.id)}">${safe(r.text)}</textarea></div><div class="actions">${r.status==="Awaiting approval"?`<button class="primary" data-action="approve" data-id="${safe(r.id)}">Approve proposal</button><button class="danger" data-action="reject" data-id="${safe(r.id)}">Reject</button>`:""}${r.status.startsWith("Approved")?`<button data-action="execute" data-id="${safe(r.id)}">Execute approved proposal</button><button class="danger" data-action="reject" data-id="${safe(r.id)}">Revoke</button>`:""}${r.status.startsWith("Blocked")?`<button data-action="reset" data-id="${safe(r.id)}">Return to review</button>`:""}${r.status==="Rejected"?`<button data-action="reset" data-id="${safe(r.id)}">Reopen proposal</button>`:""}</div></article>`;}
+  function render(){persistState();const pending=state.requests.filter(r=>r.status==="Awaiting approval").length;const approved=state.requests.filter(r=>r.status.startsWith("Approved")).length;$('statPending').textContent=pending;$('statApproved').textContent=approved;$('navCount').textContent=pending;const overview=state.requests.filter(r=>r.status==="Awaiting approval").slice(0,3);$('overviewCards').innerHTML=overview.length?overview.map(card).join(""):`<div class="empty"><strong>No proposals waiting</strong>Use the request box above to prepare your first action proposal.</div>`;$('approvalCards').innerHTML=state.requests.length?state.requests.map(card).join(""):`<div class="empty"><strong>Your queue is clear</strong>New proposals will appear here for review. Nothing runs in the background.</div>`;renderLog();}
+  function renderLog(){$('activityLog').innerHTML=state.logs.length?state.logs.map(x=>`<div class="log-row"><div class="log-time">${safe(x.time)}</div><div><strong>${safe(x.title)}</strong><p>${safe(x.detail)}</p></div></div>`).join(""):`<div class="empty"><strong>No activity yet</strong>Events will appear here during this browser session.</div>`;}
+  function showView(name){document.querySelectorAll('.view').forEach(el=>el.classList.toggle('active',el.id==='view-'+name));document.querySelectorAll('.nav[data-view],.mobile-tab[data-view]').forEach(el=>el.classList.toggle('active',el.dataset.view===name));$('pageTitle').textContent=titles[name][0];$('pageSubtitle').textContent=titles[name][1];const menu=$('mobileMoreMenu');if(menu)menu.classList.remove('open');const more=$('mobileMoreTab');if(more)more.setAttribute('aria-expanded','false');}
+  document.querySelectorAll('[data-view]').forEach(el=>el.addEventListener('click',()=>showView(el.dataset.view)));
+  $('prepareBtn').addEventListener('click',()=>{makeRequest($('requestInput').value);$('requestInput').value='';});
+  $('prepareBtn2').addEventListener('click',()=>{makeRequest($('requestInput2').value);$('requestInput2').value='';});
+  document.addEventListener('click',e=>{const b=e.target.closest('[data-action]');if(!b)return;const id=b.dataset.id;switch(b.dataset.action){case'approve':approve(id);break;case'reject':reject(id);break;case'execute':execute(id);break;case'reset':{const r=state.requests.find(x=>x.id===id);if(r){r.status='Awaiting approval';r.approvedSnapshot=null;log('Proposal reopened','Approval required again.');render();}break;}}});
+  document.addEventListener('change',e=>{const field=e.target.closest('[data-edit]');if(!field)return;const r=state.requests.find(x=>x.id===field.dataset.edit);if(r&&field.value.trim()!==r.text)editTitle(r.id,field.value.trim());});
+  $('clearLogBtn').addEventListener('click',()=>{state.logs=[];persistState();renderLog();});
+  $('exportBtn').addEventListener('click',exportBackup);
+  $('importBtn').addEventListener('click',()=>$('importFile').click());
+  $('importFile').addEventListener('change',e=>importBackup(e.target.files && e.target.files[0]));
+  const TASK_KEY = 'personal-work-os-planning:v1';
+  const MAX_PLAN_TASKS = 500;
+  let planTasks = [];
+  try {
+    const saved = JSON.parse(localStorage.getItem(TASK_KEY) || '[]');
+    if (Array.isArray(saved)) planTasks = saved.filter(t => t && typeof t.id === 'string' && typeof t.title === 'string' && t.title.trim() && t.title.length <= 180 && ['open','done'].includes(t.status) && Number.isFinite(t.impact) && Number.isFinite(t.effort)).slice(0, MAX_PLAN_TASKS);
+  } catch { planTasks = []; }
+  const savePlanTasks = () => { try { localStorage.setItem(TASK_KEY, JSON.stringify(planTasks)); } catch { alert('Could not save this task. Browser storage may be full or disabled.'); } };
+  function priorityFor(task, now = new Date()) {
+    const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+    let dueScore = 20;
+    let daysUntil = null;
+    if (task.due) {
+      const d = new Date(`${task.due}T00:00:00`);
+      if (!Number.isNaN(d.getTime())) {
+        daysUntil = Math.round((d - today) / 86400000);
+        dueScore = daysUntil <= 1 ? 100 : daysUntil <= 3 ? 80 : daysUntil <= 7 ? 60 : daysUntil <= 14 ? 40 : 20;
+      }
+    }
+    const impactScore = Math.max(1, Math.min(5, task.impact)) * 20;
+    const dependencyScore = task.unblocks ? 100 : task.blocked ? 0 : 40;
+    const ageDays = Math.max(0, Math.floor((now.getTime() - Date.parse(task.created || now.toISOString())) / 86400000));
+    const ageScore = Math.min(100, ageDays * 10);
+    const capacity = Number($('planCapacity')?.value || 180);
+    const effortScore = task.effort <= capacity ? Math.max(20, 100 - Math.max(0, task.effort / Math.max(capacity, 1)) * 60) : 10;
+    const score = Math.round(dueScore * .30 + impactScore * .30 + dependencyScore * .20 + ageScore * .10 + effortScore * .10);
+    return { score, dueScore, impactScore, dependencyScore, ageScore, effortScore, daysUntil };
+  }
+  function planTaskCard(task, rank = null) {
+    const p = priorityFor(task);
+    const dueText = task.due ? `Due ${task.due}` : 'No due date';
+    const reason = task.blocked ? 'Blocked by a dependency. Resolve the blocker before scheduling execution.' : `${p.daysUntil !== null && p.daysUntil <= 1 ? 'Urgent deadline. ' : ''}${task.unblocks ? 'Unblocks other work. ' : ''}Impact ${task.impact}/5. Estimated ${task.effort} minutes.`;
+    return `<article class="task-item"><div class="task-item-head"><div class="task-item-title">${rank ? `${rank}. ` : ''}${safe(task.title)}</div><span class="score">${p.score}/100</span></div><div class="task-meta"><span>${safe(dueText)}</span><span>${task.effort} min</span><span>Impact ${task.impact}/5</span><span>${task.blocked ? 'Blocked' : task.unblocks ? 'Unblocks work' : task.status === 'done' ? 'Completed' : 'Ready'}</span></div><p class="rank-reason">${safe(reason)}</p><div class="actions">${task.status !== 'done' ? `<button data-plan-action="done" data-plan-id="${safe(task.id)}">Mark done</button>` : `<button data-plan-action="reopen" data-plan-id="${safe(task.id)}">Reopen</button>`}<button class="danger" data-plan-action="delete" data-plan-id="${safe(task.id)}">Remove</button></div></article>`;
+  }
+  function renderPlan() {
+    const capacity = Number($('planCapacity').value || 180);
+    const open = planTasks.filter(t => t.status === 'open');
+    const blocked = open.filter(t => t.blocked).sort((a,b) => priorityFor(b).score - priorityFor(a).score);
+    const ready = open.filter(t => !t.blocked).sort((a,b) => priorityFor(b).score - priorityFor(a).score || Date.parse(a.created) - Date.parse(b.created));
+    const selected = []; let total = 0;
+    for (const task of ready) { if (total + task.effort <= capacity) { selected.push(task); total += task.effort; } }
+    const selectedIds = new Set(selected.map(t => t.id));
+    const later = [...blocked, ...ready.filter(t => !selectedIds.has(t.id)), ...planTasks.filter(t => t.status === 'done')];
+    $('planSelected').textContent = selected.length;
+    $('planTime').textContent = `${total} min`;
+    $('planRemaining').textContent = `${Math.max(0, capacity-total)} min`;
+    $('planBlocked').textContent = blocked.length;
+    $('planSummary').textContent = `${open.length} open task(s) · ranked locally · ${capacity} minutes available`;
+    $('dailyPlanCards').innerHTML = selected.length ? selected.map((t,i)=>planTaskCard(t,i+1)).join('') : `<div class="empty"><strong>No tasks fit today's plan yet</strong>Add a task or increase available focus time. Blocked tasks are never scheduled.</div>`;
+    $('laterPlanCards').innerHTML = later.length ? later.map(t=>planTaskCard(t)).join('') : `<div class="empty"><strong>Nothing waiting</strong>Unselected, blocked, and completed tasks will appear here.</div>`;
+  }
+  $('taskForm').addEventListener('submit', e => {
+    e.preventDefault();
+    const title = $('taskTitle').value.trim();
+    if (!title) return;
+    if (planTasks.length >= MAX_PLAN_TASKS) { alert('Local planning is limited to 500 tasks. Export/clear completed tasks before adding more.'); return; }
+    planTasks.unshift({id:crypto.randomUUID ? crypto.randomUUID() : `${Date.now()}-${Math.random()}`,title,due:$('taskDue').value || null,impact:Number($('taskImpact').value),effort:Number($('taskEffort').value),blocked:$('taskBlocked').checked,unblocks:$('taskUnblocks').checked,status:'open',created:new Date().toISOString()});
+    savePlanTasks(); e.target.reset(); $('taskImpact').value='4'; $('taskEffort').value='60'; renderPlan();
+  });
+  $('planCapacity').addEventListener('change', renderPlan);
+  document.addEventListener('click', e => {
+    const b = e.target.closest('[data-plan-action]'); if (!b) return;
+    const task = planTasks.find(t => t.id === b.dataset.planId); if (!task) return;
+    if (b.dataset.planAction === 'done') task.status='done';
+    else if (b.dataset.planAction === 'reopen') task.status='open';
+    else if (b.dataset.planAction === 'delete') planTasks = planTasks.filter(t => t.id !== task.id);
+    savePlanTasks(); renderPlan();
+  });
+  $('clearCompletedTasks').addEventListener('click', () => { planTasks = planTasks.filter(t => t.status !== 'done'); savePlanTasks(); renderPlan(); });
+  restoreState();
+  render();
+  renderPlan();
 })();
-if('serviceWorker' in navigator && location.protocol.startsWith('http')){window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js').catch(()=>{}))}
+if ('serviceWorker' in navigator && location.protocol === 'https:') { window.addEventListener('load', () => navigator.serviceWorker.register('./sw.js').catch(() => {})); }
+document.addEventListener('DOMContentLoaded', () => {
+  const tab = document.getElementById('mobileMoreTab');
+  const menu = document.getElementById('mobileMoreMenu');
+  if (tab && menu) tab.addEventListener('click', () => { const open = !menu.classList.contains('open'); menu.classList.toggle('open', open); tab.setAttribute('aria-expanded', String(open)); });
+  const help = document.getElementById('installHelpBtn');
+  if (help) help.addEventListener('click', () => { menu.classList.remove('open'); const more = document.getElementById('mobileMoreTab'); if (more) more.setAttribute('aria-expanded','false'); alert('Open this site in Safari, tap Share, choose Add to Home Screen, then tap Add.'); });
+});
 </script>
-</body></html>
+</body>
+</html>
