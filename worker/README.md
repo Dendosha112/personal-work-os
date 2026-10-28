@@ -6,7 +6,7 @@ This Worker is a **server-side read-only adapter** for the existing Tasks Tracke
 
 Set these under **Worker → Settings → Variables and Secrets**:
 
-- `APP_ACCESS_KEY`: long random secret used to authorize this single-user app's requests.
+- `APP_ACCESS_KEY`: a long random secret (at least 32 random bytes) used to authorize this single-user app's requests.
 - `NOTION_API_KEY`: secret token for a Notion internal integration with read-content capability.
 - `NOTION_DATA_SOURCE_ID`: `1fd4bebd-e186-80be-91d8-000b71cdb176`
 
@@ -18,7 +18,7 @@ The integration must be explicitly shared with the existing **Tasks Tracker** da
 2. Upload `worker/src/index.mjs` as the Worker entry point, using `worker/wrangler.toml` for the non-secret settings.
 3. Add the three secrets listed above using the Cloudflare dashboard's Secrets UI. Never paste the Notion API key into GitHub, this repository, the app settings, or chat.
 4. Deploy the Worker and note its `https://<worker-name>.<account>.workers.dev` URL.
-5. The app's Settings page must be configured with that HTTPS Worker URL and the same `APP_ACCESS_KEY`. The key is a bearer credential; keep it private and use only in the app you control.
+5. In the app's Settings page, enter that HTTPS Worker URL and the same `APP_ACCESS_KEY`. The app stores the key in session storage for that browser tab; clear the tab/session or remove the key from the app when finished.
 6. Confirm `GET /api/health` returns `configured: true`, then load the Tasks Tracker from the app. The endpoint only returns task metadata needed for prioritization.
 
 ### Routes
@@ -26,7 +26,7 @@ The integration must be explicitly shared with the existing **Tasks Tracker** da
 - `GET /api/health`: configuration status; no secrets are returned.
 - `GET /api/tasks?limit=50`: requires `Authorization: Bearer <APP_ACCESS_KEY>`, returns a bounded read-only projection of the existing Tasks Tracker.
 
-The API restricts browser CORS to the GitHub Pages origin, but **CORS is not authentication**. The bearer key is still required. Never treat the URL or CORS check as a secret. Keep the key out of screenshots and public issues.
+The API restricts browser CORS to the GitHub Pages origin, but **CORS is not authentication**. The bearer key is still required. Anyone with that key can access task metadata from another HTTP client, so keep it private, make it high entropy, and rotate it immediately if exposed. Never treat the URL or CORS check as a secret.
 
 ## Current boundaries
 
