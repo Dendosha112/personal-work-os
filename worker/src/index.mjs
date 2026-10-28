@@ -77,6 +77,11 @@ export default {
         service: "personal-work-os-readonly-connector",
         mode: "read-only",
         configured: Boolean(env.APP_ACCESS_KEY && env.NOTION_API_KEY && env.NOTION_DATA_SOURCE_ID),
+        missingConfiguration: [
+          ...(!env.APP_ACCESS_KEY ? ["APP_ACCESS_KEY"] : []),
+          ...(!env.NOTION_API_KEY ? ["NOTION_API_KEY"] : []),
+          ...(!env.NOTION_DATA_SOURCE_ID ? ["NOTION_DATA_SOURCE_ID"] : [])
+        ],
         writesEnabled: false,
         aiEnabled: false
       }, 200, cors || {});
