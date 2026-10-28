@@ -1,0 +1,7 @@
+name = "personal-work-os-readonly-api"
+main = "src/index.mjs"
+compatibility_date = "2026-10-28"
+workers_dev = true
+
+[vars]
+API_ALLOWED_ORIGIN = "https://dendosha112.github.io"
