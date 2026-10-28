@@ -55,8 +55,10 @@ jobs:
           console.log(`Mode: ${health.mode || 'unknown'}`);
           console.log(`Required runtime configuration: ${health.configured === true ? 'present' : 'missing'}`);
           console.log(`Notion writes enabled: ${health.writesEnabled === true}`);
+          const missing = Array.isArray(health.missingConfiguration) ? health.missingConfiguration : [];
+          console.log(`Missing runtime settings: ${missing.length ? missing.join(', ') : 'none or not reported by deployed version'}`);
           if (health.ok !== true || health.mode !== 'read-only' || health.configured !== true) {
-            throw new Error('Worker is deployed but reports missing runtime configuration. Check APP_ACCESS_KEY and NOTION_API_KEY under Cloudflare Worker Secrets.');
+            throw new Error(`Worker reports missing configuration: ${missing.join(', ') || 'the deployed version did not report the missing names'}. Verify the exact names under Cloudflare Worker Settings → Variables and Secrets.`);
           }
 
           const authResponse = await fetch(`${base}/api/tasks?limit=1`, {
