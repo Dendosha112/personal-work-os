@@ -3,7 +3,8 @@ import assert from "node:assert/strict";
 import worker from "../src/index.mjs";
 
 const origin = "https://dendosha112.github.io";
-const env = { API_ALLOWED_ORIGIN: origin, APP_ACCESS_KEY: "test-long-random-key", NOTION_API_KEY: "notion-secret", NOTION_DATA_SOURCE_ID: "1fd4bebd-e186-80be-91d8-000b71cdb176" };
+const cloudflarePagesOrigin = "https://personal-work-os-3mr.pages.dev";
+const env = { API_ALLOWED_ORIGINS: `${origin},${cloudflarePagesOrigin}`, APP_ACCESS_KEY: "test-long-random-key", NOTION_API_KEY: "notion-secret", NOTION_DATA_SOURCE_ID: "1fd4bebd-e186-80be-91d8-000b71cdb176" };
 
 test("health reveals configuration state but not secrets and says read-only", async () => {
   const res = await worker.fetch(new Request("https://api.test/api/health", { headers: { Origin: origin } }), env);
@@ -18,6 +19,12 @@ test("health reveals configuration state but not secrets and says read-only", as
 test("rejects unknown browser origins", async () => {
   const res = await worker.fetch(new Request("https://api.test/api/tasks", { headers: { Origin: "https://evil.example" } }), env);
   assert.equal(res.status, 403);
+});
+
+test("allows the Cloudflare Pages frontend origin", async () => {
+  const res = await worker.fetch(new Request("https://api.test/api/health", { headers: { Origin: cloudflarePagesOrigin } }), env);
+  assert.equal(res.status, 200);
+  assert.equal(res.headers.get("Access-Control-Allow-Origin"), cloudflarePagesOrigin);
 });
 
 test("tasks route requires bearer secret", async () => {
