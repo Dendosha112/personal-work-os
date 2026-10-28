@@ -2,40 +2,39 @@
 
 This Worker is a **server-side read-only adapter** for the existing Tasks Tracker. It does not create, update, archive, or delete Notion records. It deliberately has no write route. Do not expose the Notion token in the browser or commit any secrets.
 
-## Required Worker secrets
+## Runtime configuration
 
-Set these under **Worker → Settings → Variables and Secrets**:
+Already configured as non-secret values in `wrangler.toml`:
+- `API_ALLOWED_ORIGIN`: `https://dendosha112.github.io`
+- `NOTION_DATA_SOURCE_ID`: the existing Tasks Tracker data source ID, `1fd4bebd-e186-80be-91d8-000b71cdb176`
 
-- `APP_ACCESS_KEY`: a long random secret (at least 32 random bytes) used to authorize this single-user app's requests.
-- `NOTION_API_KEY`: secret token for a Notion internal integration with read-content capability.
-- `NOTION_DATA_SOURCE_ID`: `1fd4bebd-e186-80be-91d8-000b71cdb176`
+Add these two values as **Cloudflare Worker Secrets** under **Settings → Variables and Secrets**:
+- `APP_ACCESS_KEY`: high-entropy random key for authorizing this single-user app.
+- `NOTION_API_KEY`: Notion internal integration token with read-content capability only.
 
-The integration must be explicitly shared with the existing **Tasks Tracker** database in Notion. Use a read-only integration; do not grant update/insert capabilities for this phase.
+The integration must be explicitly shared with the existing **Tasks Tracker** database in Notion. Do not grant update, insert, or delete capabilities for this phase.
 
-## Deployment outline (free-tier, no billing change)
+## Deploy from iPhone
 
-1. Create a Cloudflare Worker on the Free plan. Do not upgrade to a paid plan or enable billing.
-2. Upload `worker/src/index.mjs` as the Worker entry point, using `worker/wrangler.toml` for the non-secret settings.
-3. Add the three secrets listed above using the Cloudflare dashboard's Secrets UI. Never paste the Notion API key into GitHub, this repository, the app settings, or chat.
-4. Deploy the Worker and note its `https://<worker-name>.<account>.workers.dev` URL.
-5. In the app's Settings page, enter that HTTPS Worker URL and the same `APP_ACCESS_KEY`. The app stores the key in session storage for that browser tab; clear the tab/session or remove the key from the app when finished.
-6. Confirm `GET /api/health` returns `configured: true`, then load the Tasks Tracker from the app. The endpoint only returns task metadata needed for prioritization.
+Follow [DEPLOY_ON_IPHONE.md](./DEPLOY_ON_IPHONE.md). It uses Cloudflare Workers Builds to deploy directly from this GitHub repo, with `worker` as the project root and `npx wrangler deploy` as the command. Select the free plan and do not enable billing. Ensure the Cloudflare Worker name exactly matches `personal-work-os-readonly-api` in `wrangler.toml`.
 
-### Routes
+Official deployment guide: https://developers.cloudflare.com/workers/ci-cd/builds/
+
+## Routes
 
 - `GET /api/health`: configuration status; no secrets are returned.
 - `GET /api/tasks?limit=50`: requires `Authorization: Bearer <APP_ACCESS_KEY>`, returns a bounded read-only projection of the existing Tasks Tracker.
 
-The API restricts browser CORS to the GitHub Pages origin, but **CORS is not authentication**. The bearer key is still required. Anyone with that key can access task metadata from another HTTP client, so keep it private, make it high entropy, and rotate it immediately if exposed. Never treat the URL or CORS check as a secret.
+The API restricts browser CORS to the GitHub Pages origin, but **CORS is not authentication**. Anyone with the bearer key can access task metadata from another HTTP client, so keep it private and high entropy. Rotate it if exposed. Never treat the Worker URL or CORS check as a secret.
 
 ## Current boundaries
 
-- The Worker is not deployed until you create it in your Cloudflare account and set secrets.
-- This read-only adapter is separate from the GitHub Pages front-end.
+- The Worker is not live until it is deployed in your Cloudflare account and both secrets are set.
+- The GitHub Pages frontend is deployed separately.
 - AI classification is not enabled.
-- There are no Notion write endpoints. Write actions remain approval-gated and must be designed and tested separately.
+- There are no Notion write endpoints. Do not add writes until read-only retrieval, authorization, and data mapping have been verified.
 - Do not publish task data in the public repository or add a scheduled action that commits private task data into this repo.
 
-## Local tests
+## Tests
 
-Run `node --test worker/test/*.test.mjs` from the repository root. These tests mock Notion's HTTP API; they do not prove that the live Worker or a real Notion integration has been configured.
+Run `node --test worker/test/*.test.mjs` from the repository root. Tests mock Notion's HTTP API; they do not prove that a live Worker or real Notion integration has been configured.
