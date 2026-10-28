@@ -402,6 +402,11 @@
   if (savedWorker) $('notionWorkerUrl').value = savedWorker;
   const savedAccessKey = sessionStorage.getItem(WORKER_SESSION_KEY);
   if (savedAccessKey) $('notionAppKey').value = savedAccessKey;
+  if (savedWorker && savedAccessKey) {
+    loadNotionTasks(savedWorker, savedAccessKey).catch(err => {
+      notionStatus(safe(err.message || 'Could not reconnect to Notion.'), 'error');
+    });
+  }
 
   restoreState();
   render();
