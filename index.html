@@ -91,7 +91,7 @@
 <div class="panel" style="margin-top:16px">
   <div class="panel-head"><div><h2>Read-only Notion connection</h2><p>Enter the deployed Worker URL and its separate app-access key. Never paste the Notion integration token here.</p></div><span class="tiny-badge">READ ONLY</span></div>
   <form id="notionConnectForm">
-    <div class="field"><label for="notionWorkerUrl">Worker HTTPS URL</label><input id="notionWorkerUrl" type="url" inputmode="url" placeholder="https://your-worker.your-account.workers.dev" required autocomplete="url"></div>
+    <div class="field"><label for="notionWorkerUrl">Worker HTTPS URL</label><input id="notionWorkerUrl" type="url" inputmode="url" value="https://personal-work-os.dendoshakarasu.workers.dev" placeholder="https://your-worker.your-account.workers.dev" required autocomplete="url"></div>
     <div class="field" style="margin-top:12px"><label for="notionAppKey">App access key (not your Notion API token)</label><input id="notionAppKey" type="password" placeholder="Paste the APP_ACCESS_KEY you set in Worker secrets" required autocomplete="off"></div>
     <div class="formrow"><span class="hint">The key is kept in this tab's session storage. Use a long, random key and do not share it.</span><button class="primary" type="submit" id="saveNotionSettingsBtn">Test & load tasks</button></div>
   </form>
