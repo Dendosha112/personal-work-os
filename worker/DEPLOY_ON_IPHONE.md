@@ -16,15 +16,15 @@ This procedure deploys only a read-only Notion adapter. It does not require a co
 2. Go to **Workers & Pages → Create application → Connect to Git** (the exact wording can vary).
 3. Authorize Cloudflare to access your GitHub repository and choose `Dendosha112/personal-work-os`, branch `main`.
 4. Set the Worker project's root directory to `worker`. Do not select the repository root because the static site lives there.
-5. Set the Worker name to exactly `personal-work-os-readonly-api` (the name in `wrangler.toml`). Leave the build command empty and use `npx wrangler deploy` as the deploy command.
+5. Use the existing Worker name `personal-work-os`, which your deployment log shows is already created. The name must match `worker/wrangler.toml`. Leave the build command empty and use `npx wrangler deploy` as the deploy command.
 6. Choose the Free plan. Do not enable paid features or configure billing.
-7. Deploy. Cloudflare should provide a URL such as `https://personal-work-os-readonly-api.<your-account>.workers.dev`.
+7. Deploy. Cloudflare should provide a URL such as `https://personal-work-os.<your-account>.workers.dev`.
 
 Cloudflare's official instructions: https://developers.cloudflare.com/workers/ci-cd/builds/
 
 ## C. Add two runtime secrets in Cloudflare
 
-In **Workers & Pages → personal-work-os-readonly-api → Settings → Variables and Secrets**, add the following as **Secret**, not plain-text variables:
+In **Workers & Pages → personal-work-os → Settings → Variables and Secrets**, add the following as **Secret**, not plain-text variables:
 
 - `APP_ACCESS_KEY`: generate a long random value (at least 32 random bytes) using your password manager's password generator. Do not reuse your GitHub or Notion passwords.
 - `NOTION_API_KEY`: the internal integration secret generated in step A.
