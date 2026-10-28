@@ -5,3 +5,4 @@ workers_dev = true
 
 [vars]
 API_ALLOWED_ORIGIN = "https://dendosha112.github.io"
+NOTION_DATA_SOURCE_ID = "1fd4bebd-e186-80be-91d8-000b71cdb176"
