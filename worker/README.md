@@ -5,7 +5,7 @@ This Worker is a **server-side read-only adapter** for the existing Tasks Tracke
 ## Runtime configuration
 
 Already configured as non-secret values in `wrangler.toml`:
-- `API_ALLOWED_ORIGIN`: `https://dendosha112.github.io`
+- `API_ALLOWED_ORIGINS`: `https://dendosha112.github.io,https://personal-work-os-3mr.pages.dev`
 - `NOTION_DATA_SOURCE_ID`: the existing Tasks Tracker data source ID, `1fd4bebd-e186-80be-91d8-000b71cdb176`
 
 Add these two values as **Cloudflare Worker Secrets** under **Settings → Variables and Secrets**:
@@ -25,12 +25,12 @@ Official deployment guide: https://developers.cloudflare.com/workers/ci-cd/build
 - `GET /api/health`: configuration status; no secrets are returned.
 - `GET /api/tasks?limit=50`: requires `Authorization: Bearer <APP_ACCESS_KEY>`, returns a bounded read-only projection of the existing Tasks Tracker.
 
-The API restricts browser CORS to the GitHub Pages origin, but **CORS is not authentication**. Anyone with the bearer key can access task metadata from another HTTP client, so keep it private and high entropy. Rotate it if exposed. Never treat the Worker URL or CORS check as a secret.
+The API restricts browser CORS to the configured GitHub Pages and Cloudflare Pages origins, but **CORS is not authentication**. Anyone with the bearer key can access task metadata from another HTTP client, so keep it private and high entropy. Rotate it if exposed. Never treat the Worker URL or CORS check as a secret.
 
 ## Current boundaries
 
 - The Worker is not live until it is deployed in your Cloudflare account and both secrets are set.
-- The GitHub Pages frontend is deployed separately.
+- The frontend can be reached through GitHub Pages (`https://dendosha112.github.io/personal-work-os/`) or Cloudflare Pages (`https://personal-work-os-3mr.pages.dev/`); the Worker is a separate deployment.
 - AI classification is not enabled.
 - There are no Notion write endpoints. Do not add writes until read-only retrieval, authorization, and data mapping have been verified.
 - Do not publish task data in the public repository or add a scheduled action that commits private task data into this repo.
