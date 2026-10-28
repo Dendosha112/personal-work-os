@@ -1,0 +1,17 @@
+# Keep Git internals, CI config, backend source, and deployment config off the public asset CDN.
+.git/
+.git/**
+**/.git/**
+.github/
+.github/**
+**/.github/**
+worker/
+worker/**
+.wrangler/
+.wrangler/**
+node_modules/
+node_modules/**
+wrangler.jsonc
+.assetsignore
+.gitignore
+README.md
