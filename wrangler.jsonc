@@ -1,0 +1,17 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "personal-work-os",
+  "main": "worker/src/index.mjs",
+  "compatibility_date": "2026-10-28",
+  "workers_dev": true,
+  "vars": {
+    "API_ALLOWED_ORIGINS": "https://dendosha112.github.io,https://personal-work-os-3mr.pages.dev",
+    "NOTION_DATA_SOURCE_ID": "1fd4bebd-e186-80be-91d8-000b71cdb176"
+  },
+  "assets": {
+    "directory": ".",
+    "binding": "ASSETS",
+    "run_worker_first": ["/api/*"],
+    "not_found_handling": "single-page-application"
+  }
+}
