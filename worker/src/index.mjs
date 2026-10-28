@@ -1,12 +1,22 @@
-const DEFAULT_ORIGIN = "https://dendosha112.github.io";
+const DEFAULT_ORIGINS = [
+  "https://dendosha112.github.io",
+  "https://personal-work-os-3mr.pages.dev"
+];
 const NOTION_VERSION = "2026-03-11";
 const MAX_PAGES = 2;
 
+function allowedOrigins(env) {
+  const configured = env.API_ALLOWED_ORIGINS || env.API_ALLOWED_ORIGIN;
+  return (configured ? configured.split(",") : DEFAULT_ORIGINS)
+    .map(value => value.trim())
+    .filter(Boolean);
+}
+
 function corsHeaders(origin, env) {
-  const allowed = env.API_ALLOWED_ORIGIN || DEFAULT_ORIGIN;
-  if (!origin || origin !== allowed) return null;
+  const allowed = allowedOrigins(env);
+  if (!origin || !allowed.includes(origin)) return null;
   return {
-    "Access-Control-Allow-Origin": allowed,
+    "Access-Control-Allow-Origin": origin,
     "Access-Control-Allow-Methods": "GET, OPTIONS",
     "Access-Control-Allow-Headers": "Content-Type, Authorization",
     "Access-Control-Max-Age": "86400",
