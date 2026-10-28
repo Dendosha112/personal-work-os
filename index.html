@@ -49,7 +49,7 @@
 </aside>
 <main class="main">
   <header class="topbar"><div><div class="eyebrow">Your operating system</div><h1 id="pageTitle">Good morning. Let's get organized.</h1><p class="subtitle" id="pageSubtitle">Capture a request. Review the plan. Approve before any consequential action.</p></div><div class="status-pill">● SAFE MODE · LOCAL PROTOTYPE</div></header>
-  <div class="notice"><span>⚠</span><div><strong>Prototype only — no live AI or Notion writes.</strong> Routing is rule-based for demonstration. Approval and execution controls below simulate the safety workflow; they do not change your Notion workspace.</div></div>
+  <div class="notice"><span>⚠</span><div><strong>AI routing is still a demo; Notion writes are disabled.</strong> You can configure the separate read-only Notion connector in Settings when its secure Worker has been deployed. Nothing in this app creates, edits, completes, or deletes Notion records.</div></div>
   <section class="view active" id="view-overview">
     <div class="stats"><div class="stat"><span>Awaiting approval</span><strong id="statPending">0</strong><small>Needs your decision</small></div><div class="stat"><span>Approved</span><strong id="statApproved">0</strong><small>Not executed</small></div><div class="stat"><span>Verified writes</span><strong>0</strong><small>Live connector disabled</small></div></div>
     <div class="grid">
@@ -80,10 +80,24 @@
     </div>
     <div class="section-title"><div><h2>Recommended next actions</h2><p id="planSummary">Add tasks to build a ranked plan.</p></div><button id="clearCompletedTasks">Clear completed</button></div><div class="cards" id="dailyPlanCards"></div>
     <div class="section-title"><div><h2>Blocked & later</h2><p>Tasks not selected for today's available focus window.</p></div></div><div class="cards" id="laterPlanCards"></div>
+
+    <div class="section-title"><div><h2>Live Notion Tasks Tracker</h2><p>Read-only view of your existing database. Refresh does not change Notion.</p></div><button id="refreshNotionTasksBtn">Refresh from Notion</button></div>
+    <div id="notionLiveStatus" class="empty"><strong>Not connected</strong>Open Settings → Read-only Notion connection to configure the API Worker.</div>
+    <div class="cards" id="notionLiveTasks"></div>
   </section>
   <section class="view" id="view-approvals"><div class="section-title" style="margin-top:0"><div><h2>Review proposals</h2><p>Approval applies only to the exact proposal shown.</p></div><span class="tiny-badge">03 · HUMAN CONTROL</span></div><div class="cards" id="approvalCards"></div></section>
   <section class="view" id="view-activity"><div class="panel"><div class="panel-head"><div><h2>Activity log</h2><p>Saved locally in this browser. Export a backup before clearing browser data. Restoring a backup replaces current local data and resets approvals for safety.</p></div><div style="display:flex;gap:8px;flex-wrap:wrap"><button id="exportBtn">Export backup</button><button id="importBtn">Restore backup</button><input id="importFile" type="file" accept="application/json,.json" hidden><button id="clearLogBtn">Clear log</button></div></div><div class="log" id="activityLog"></div></div></section>
-  <section class="view" id="view-settings"><div class="panel"><div class="panel-head"><div><h2>Connections & safety</h2><p>Current implementation status. No integration is assumed to be live.</p></div><span class="tiny-badge">SYSTEM</span></div><div class="settings-list"><div class="setting"><div><strong>Notion read/write connector</strong><p>Not connected in this standalone prototype. Live writes require a server-side connector, scoped credentials, duplicate checks and read-after-write verification.</p></div><span class="disabled-chip">NOT CONNECTED</span></div><div class="setting"><div><strong>AI model provider</strong><p>Rule-based demo routing only. A production AI provider and server-side key management must be configured before model-backed planning is enabled.</p></div><span class="disabled-chip">NOT CONNECTED</span></div><div class="setting"><div><strong>Approval gate</strong><p>Every proposal starts awaiting approval. Changing the proposal invalidates prior approval. Execution is still blocked without a verified connector.</p></div><span class="tag ok">ENFORCED IN DEMO</span></div><div class="setting"><div><strong>Background automation</strong><p>No scheduler, event trigger, retries or background execution are configured by this prototype.</p></div><span class="disabled-chip">DISABLED</span></div><div class="setting"><div><strong>Data storage</strong><p>Request proposals and activity logs are saved in this browser using local storage. They do not sync across devices. Export a JSON backup regularly. Do not enter passwords, API keys, or sensitive client information.</p></div><span class="tag ok">LOCAL ONLY</span></div></div></div></section>
+  <section class="view" id="view-settings"><div class="panel"><div class="panel-head"><div><h2>Connections & safety</h2><p>Current implementation status. No integration is assumed to be live.</p></div><span class="tiny-badge">SYSTEM</span></div><div class="settings-list"><div class="setting"><div><strong>Notion read-only connector</strong><p>Use the secure Worker endpoint to retrieve tasks from the existing Tasks Tracker. The app never receives the Notion integration token. Writes remain disabled.</p></div><span class="disabled-chip">CONFIGURE BELOW</span></div><div class="setting"><div><strong>AI model provider</strong><p>Rule-based demo routing only. Live model-backed classification is not enabled.</p></div><span class="disabled-chip">NOT CONNECTED</span></div><div class="setting"><div><strong>Approval gate</strong><p>Every proposal starts awaiting approval. Changing the proposal invalidates prior approval. Execution remains blocked without a verified write connector.</p></div><span class="tag ok">WRITES DISABLED</span></div><div class="setting"><div><strong>Background automation</strong><p>No scheduler, event trigger, retries or background execution are configured by this prototype.</p></div><span class="disabled-chip">DISABLED</span></div><div class="setting"><div><strong>Data storage</strong><p>Request proposals and activity logs stay in this browser. The Worker access key is held in session storage for this browser tab; it is not written to the public repository. Do not enter your Notion token here.</p></div><span class="tag ok">LOCAL ONLY</span></div></div>
+<div class="panel" style="margin-top:16px">
+  <div class="panel-head"><div><h2>Read-only Notion connection</h2><p>Enter the deployed Worker URL and its separate app-access key. Never paste the Notion integration token here.</p></div><span class="tiny-badge">READ ONLY</span></div>
+  <form id="notionConnectForm">
+    <div class="field"><label for="notionWorkerUrl">Worker HTTPS URL</label><input id="notionWorkerUrl" type="url" inputmode="url" placeholder="https://your-worker.your-account.workers.dev" required autocomplete="url"></div>
+    <div class="field" style="margin-top:12px"><label for="notionAppKey">App access key (not your Notion API token)</label><input id="notionAppKey" type="password" placeholder="Paste the APP_ACCESS_KEY you set in Worker secrets" required autocomplete="off"></div>
+    <div class="formrow"><span class="hint">The key is kept in this tab's session storage. Use a long, random key and do not share it.</span><button class="primary" type="submit" id="saveNotionSettingsBtn">Test & load tasks</button></div>
+  </form>
+  <div id="notionConnectionStatus" class="empty" role="status" aria-live="polite" style="margin-top:12px">Not configured. Deploy the Worker and add its secrets first.</div>
+</div>
+</div></section>
   <div class="footer">PERSONAL AGENT · APPROVAL-FIRST MVP · This local prototype saves proposals and logs only in this browser. It is not connected to Notion, an AI provider, or background automation. Export backups regularly. Do not enter passwords, API keys, or sensitive client information.</div>
 </main>
 </div>
@@ -284,6 +298,111 @@
     savePlanTasks(); renderPlan();
   });
   $('clearCompletedTasks').addEventListener('click', () => { planTasks = planTasks.filter(t => t.status !== 'done'); savePlanTasks(); renderPlan(); });
+
+  // Read-only Notion Worker configuration. The Notion API token must stay server-side.
+  const WORKER_URL_KEY = 'pwo:readonly-worker-url';
+  const WORKER_SESSION_KEY = 'pwo:readonly-app-key';
+  let notionTasksCache = [];
+
+  function normalizeWorkerUrl(raw) {
+    const url = new URL(String(raw || '').trim());
+    if (url.protocol !== 'https:' || url.username || url.password || url.search || url.hash) {
+      throw new Error('Use a clean HTTPS Worker URL without credentials, query string, or hash.');
+    }
+    return url.href.replace(/\/+$/, '');
+  }
+  function notionStatus(message, kind = 'info') {
+    const el = $('notionConnectionStatus');
+    if (el) {
+      el.className = 'empty';
+      el.style.borderColor = kind === 'error' ? '#5a3035' : kind === 'success' ? '#35552b' : '';
+      el.innerHTML = message;
+    }
+    const planStatus = $('notionLiveStatus');
+    if (planStatus && kind === 'error') planStatus.innerHTML = '<strong>Connection error</strong>' + safe(message);
+  }
+  function priorityNumber(value) {
+    return value === 'High' ? 3 : value === 'Medium' ? 2 : value === 'Low' ? 1 : 0;
+  }
+  function notionScore(task) {
+    let score = priorityNumber(task.priority) * 20;
+    if (task.dueDate) {
+      const due = new Date(task.dueDate + 'T23:59:59').getTime();
+      const days = (due - Date.now()) / 86400000;
+      score += days < 0 ? 40 : days < 1 ? 35 : days < 3 ? 28 : days < 7 ? 18 : 5;
+    }
+    return Math.min(100, score);
+  }
+  function renderNotionTasks() {
+    const list = $('notionLiveTasks');
+    const status = $('notionLiveStatus');
+    if (!list || !status) return;
+    const active = notionTasksCache.filter(t => !['done','complete','completed'].includes(String(t.status || '').toLowerCase()))
+      .sort((a,b) => notionScore(b)-notionScore(a));
+    status.className = 'empty';
+    status.innerHTML = '<strong>Read-only Notion data loaded</strong>' + active.length + ' active task(s) fetched. Nothing has been written to Notion.';
+    list.innerHTML = active.length ? active.map(t => {
+      const meta = [t.priority, t.area, t.dueDate ? 'Due ' + t.dueDate : '', Number.isFinite(t.estimatedMinutes) ? t.estimatedMinutes + ' min' : '', t.status].filter(Boolean).map(s=>'<span class="tag">'+safe(s)+'</span>').join('');
+      return '<article class="task-item"><div class="task-item-head"><div class="task-item-title">'+safe(t.title)+'</div><span class="score">'+notionScore(t)+'/100</span></div><div class="meta">'+meta+'</div>'+(t.description?'<p>'+safe(t.description.slice(0,240))+'</p>':'')+'<div class="actions"><a href="'+safe(t.url)+'" target="_blank" rel="noopener noreferrer" style="font-size:11px;color:var(--accent)">Open in Notion ↗</a></div></article>';
+    }).join('') : '<div class="empty"><strong>No active tasks returned</strong>Check the Task Tracker status values and Worker configuration.</div>';
+  }
+  async function loadNotionTasks(workerBase, appKey) {
+    const status = $('notionConnectionStatus');
+    if (status) status.textContent = 'Checking Worker and querying Notion…';
+    const health = await fetch(workerBase + '/api/health', { headers: { 'Accept': 'application/json' }, cache: 'no-store' });
+    if (!health.ok) throw new Error('The Worker health endpoint returned HTTP ' + health.status + '.');
+    const healthBody = await health.json();
+    if (!healthBody.configured) throw new Error('Worker is online but missing one or more server-side secrets.');
+    const res = await fetch(workerBase + '/api/tasks?limit=100', { headers: { 'Accept': 'application/json', 'Authorization': 'Bearer ' + appKey }, cache: 'no-store' });
+    if (res.status === 401) throw new Error('Access key rejected. Match it with the Worker APP_ACCESS_KEY secret.');
+    if (!res.ok) {
+      const body = await res.json().catch(()=>({}));
+      if (body.error === 'notion_auth_or_permission_error') throw new Error('Notion rejected the integration. Confirm the token is correct and shared with Tasks Tracker.');
+      if (body.error === 'notion_not_configured') throw new Error('Worker is missing the Notion API key or data source ID secret.');
+      throw new Error('Notion task retrieval failed (HTTP ' + res.status + ').');
+    }
+    const body = await res.json();
+    if (!Array.isArray(body.tasks)) throw new Error('The Worker returned an unexpected task response.');
+    notionTasksCache = body.tasks;
+    renderNotionTasks();
+    notionStatus('Connected. Loaded ' + body.tasks.length + ' task(s) in read-only mode. Notion remains unchanged.', 'success');
+  }
+  $('notionConnectForm').addEventListener('submit', async e => {
+    e.preventDefault();
+    let endpoint;
+    try { endpoint = normalizeWorkerUrl($('notionWorkerUrl').value); }
+    catch (err) { notionStatus(safe(err.message), 'error'); return; }
+    const key = $('notionAppKey').value.trim();
+    if (key.length < 24) { notionStatus('The app access key looks too short. Use the long random secret configured in Cloudflare.', 'error'); return; }
+    localStorage.setItem(WORKER_URL_KEY, endpoint);
+    sessionStorage.setItem(WORKER_SESSION_KEY, key);
+    const btn = $('saveNotionSettingsBtn'); btn.disabled = true; btn.textContent = 'Connecting…';
+    try {
+      await loadNotionTasks(endpoint, key);
+    } catch (err) {
+      notionStatus(safe(err.message || 'Connection failed.'), 'error');
+    } finally {
+      btn.disabled = false; btn.textContent = 'Test & load tasks';
+    }
+  });
+  $('refreshNotionTasksBtn').addEventListener('click', async () => {
+    const endpoint = localStorage.getItem(WORKER_URL_KEY);
+    const key = sessionStorage.getItem(WORKER_SESSION_KEY);
+    if (!endpoint || !key) {
+      $('notionLiveStatus').innerHTML = '<strong>Not connected</strong>Open More → Connections & safety to configure the Worker.';
+      return;
+    }
+    const btn = $('refreshNotionTasksBtn'); btn.disabled = true; btn.textContent = 'Refreshing…';
+    try { await loadNotionTasks(endpoint, key); }
+    catch (err) {
+      $('notionLiveStatus').innerHTML = '<strong>Could not refresh</strong>' + safe(err.message || 'Connection failed.');
+    } finally { btn.disabled = false; btn.textContent = 'Refresh from Notion'; }
+  });
+  const savedWorker = localStorage.getItem(WORKER_URL_KEY);
+  if (savedWorker) $('notionWorkerUrl').value = savedWorker;
+  const savedAccessKey = sessionStorage.getItem(WORKER_SESSION_KEY);
+  if (savedAccessKey) $('notionAppKey').value = savedAccessKey;
+
   restoreState();
   render();
   renderPlan();
