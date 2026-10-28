@@ -29,7 +29,7 @@ In **Workers & Pages → personal-work-os-readonly-api → Settings → Variable
 - `APP_ACCESS_KEY`: generate a long random value (at least 32 random bytes) using your password manager's password generator. Do not reuse your GitHub or Notion passwords.
 - `NOTION_API_KEY`: the internal integration secret generated in step A.
 
-The data source ID and allowed website origin are already configured in `worker/wrangler.toml` and are not secret values. Save and deploy after adding the secrets.
+The data source ID and both allowed website origins are already configured in `worker/wrangler.toml` and are not secret values. Save and deploy after adding the secrets.
 
 Official secret guidance: https://developers.cloudflare.com/workers/configuration/secrets/
 
@@ -41,7 +41,7 @@ Official secret guidance: https://developers.cloudflare.com/workers/configuratio
 
 ## E. Connect the iPhone app
 
-1. Open https://dendosha112.github.io/personal-work-os/ in Safari.
+1. Open https://personal-work-os-3mr.pages.dev/ in Safari (the Cloudflare Pages site). The GitHub Pages version is also available at https://dendosha112.github.io/personal-work-os/.
 2. Go to **More → Connections & safety → Read-only Notion connection**.
 3. Enter your Worker URL and the same `APP_ACCESS_KEY` (not the Notion API key).
 4. Tap **Test & load tasks**.
