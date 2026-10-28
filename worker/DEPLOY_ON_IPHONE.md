@@ -15,8 +15,8 @@ This procedure deploys only a read-only Notion adapter. It does not require a co
 1. Open the Cloudflare dashboard: https://dash.cloudflare.com/
 2. Go to **Workers & Pages → Create application → Connect to Git** (the exact wording can vary).
 3. Authorize Cloudflare to access your GitHub repository and choose `Dendosha112/personal-work-os`, branch `main`.
-4. Set the Worker project's root directory to `worker`. Do not select the repository root because the static site lives there.
-5. Use the existing Worker name `personal-work-os`, which your deployment log shows is already created. The name must match `worker/wrangler.toml`. Leave the build command empty and use `npx wrangler deploy` as the deploy command.
+4. Keep the project's root directory at the repository root (`.`). A root-level `wrangler.jsonc` now points to `worker/src/index.mjs` and configures the static site assets, so do not change the root directory to `worker`.
+5. Use the existing Worker name `personal-work-os`, which your deployment log shows is already created. The name matches the root `wrangler.jsonc`. Leave the build command empty and use `npx wrangler deploy` as the deploy command.
 6. Choose the Free plan. Do not enable paid features or configure billing.
 7. Deploy. Cloudflare should provide a URL such as `https://personal-work-os.<your-account>.workers.dev`.
 
@@ -41,9 +41,9 @@ Official secret guidance: https://developers.cloudflare.com/workers/configuratio
 
 ## E. Connect the iPhone app
 
-1. Open https://personal-work-os-3mr.pages.dev/ in Safari (the Cloudflare Pages site). The GitHub Pages version is also available at https://dendosha112.github.io/personal-work-os/.
+1. Open https://personal-work-os-3mr.pages.dev/ in Safari (the Cloudflare Pages site). The same frontend is also bundled with the Worker at https://personal-work-os.dendoshakarasu.workers.dev/.
 2. Go to **More → Connections & safety → Read-only Notion connection**.
-3. Enter your Worker URL and the same `APP_ACCESS_KEY` (not the Notion API key).
+3. Enter `https://personal-work-os.dendoshakarasu.workers.dev` as the Worker URL and the `APP_ACCESS_KEY` you set in Cloudflare (not the Notion API key).
 4. Tap **Test & load tasks**.
 5. In **Priority & daily plan**, use **Refresh from Notion**. Task cards link back to the original Notion records.
 
