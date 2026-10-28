@@ -16,7 +16,7 @@ The integration must be explicitly shared with the existing **Tasks Tracker** da
 
 ## Deploy from iPhone
 
-Follow [DEPLOY_ON_IPHONE.md](./DEPLOY_ON_IPHONE.md). It uses Cloudflare Workers Builds to deploy directly from this GitHub repo, with `worker` as the project root and `npx wrangler deploy` as the command. Select the free plan and do not enable billing. Ensure the Cloudflare Worker name exactly matches `personal-work-os` in `wrangler.toml`.
+Follow [DEPLOY_ON_IPHONE.md](./DEPLOY_ON_IPHONE.md). The Cloudflare Git build runs from the repository root and uses the root `wrangler.jsonc`, which explicitly sets `main` to `worker/src/index.mjs` and bundles the frontend assets. Leave the build command empty and use `npx wrangler deploy`. Select the free plan and do not enable billing.
 
 Official deployment guide: https://developers.cloudflare.com/workers/ci-cd/builds/
 
