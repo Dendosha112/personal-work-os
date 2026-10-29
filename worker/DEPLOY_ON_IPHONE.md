@@ -29,7 +29,7 @@ In **Workers & Pages → personal-work-os → Settings → Variables and Secrets
 - `APP_ACCESS_KEY`: generate a long random value (at least 32 random bytes) using your password manager's password generator. Do not reuse your GitHub or Notion passwords.
 - `NOTION_API_KEY`: the internal integration secret generated in step A.
 
-The data source ID and both allowed website origins are already configured in `worker/wrangler.toml` and are not secret values. Save and deploy after adding the secrets.
+The data source ID and both allowed website origins are already configured in the root `wrangler.jsonc` and `worker/wrangler.toml` and are not secret values. The configuration now also declares an `AI` binding for Cloudflare Workers AI; it does not require an additional API key. Save and deploy after adding secrets and whenever Worker code/configuration changes.
 
 Official secret guidance: https://developers.cloudflare.com/workers/configuration/secrets/
 
@@ -53,5 +53,6 @@ The Worker access key is stored only in the current browser session; the Worker 
 
 - The endpoint is read-only and has no create/update/delete routes.
 - Tasks loaded into the app are a view of the existing Tasks Tracker, not a second Notion database.
-- AI model-backed classification and write actions are not enabled.
+- Model-backed request classification uses the Cloudflare Workers AI `AI` binding when enabled in the deployed Worker. It is limited to classification only, is protected by `APP_ACCESS_KEY`, and does not modify Notion.
+- Cloudflare Workers AI currently provides a 10,000-Neuron daily free allocation; on the Free plan, inference may fail after that daily quota is used. Do not enable paid billing just to complete this setup. See https://developers.cloudflare.com/workers-ai/platform/pricing/.
 - The Worker still needs to be deployed in your Cloudflare account and the two secrets configured before the live connection can work.
