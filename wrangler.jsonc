@@ -8,6 +8,9 @@
     "API_ALLOWED_ORIGINS": "https://dendosha112.github.io,https://personal-work-os-3mr.pages.dev",
     "NOTION_DATA_SOURCE_ID": "1fd4bebd-e186-80be-91d8-000b71cdb176"
   },
+  "ai": {
+    "binding": "AI"
+  },
   "assets": {
     "directory": ".",
     "binding": "ASSETS",
