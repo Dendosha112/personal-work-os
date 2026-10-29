@@ -29,10 +29,11 @@ The API restricts browser CORS to the configured GitHub Pages and Cloudflare Pag
 
 ## Current boundaries
 
-- The Worker is not live until it is deployed in your Cloudflare account and both secrets are set.
-- The frontend can be reached through GitHub Pages (`https://dendosha112.github.io/personal-work-os/`) or Cloudflare Pages (`https://personal-work-os-3mr.pages.dev/`); the Worker is a separate deployment.
-- AI classification is not enabled.
-- There are no Notion write endpoints. Do not add writes until read-only retrieval, authorization, and data mapping have been verified.
+- The Worker is deployed separately from GitHub Pages. The root `wrangler.jsonc` configures the existing read-only Notion adapter and the `AI` binding.
+- The frontend can be reached through GitHub Pages (`https://dendosha112.github.io/personal-work-os/`) or Cloudflare Pages (`https://personal-work-os-3mr.pages.dev/`).
+- `POST /api/classify` uses Cloudflare Workers AI to label a request with a route category. It requires the same `APP_ACCESS_KEY`, accepts at most 4,000 characters, and never runs tools or changes Notion. If the AI binding is not deployed or inference fails, the frontend records a rule-based fallback instead of claiming AI succeeded.
+- AI requests use Cloudflare's daily free allocation when available; the Free plan may reject further inference after the 10,000-Neuron daily allocation is exhausted. No provider API key is required for the native binding, and no paid plan should be enabled for this setup.
+- There are no Notion write endpoints. Do not add writes until read-only retrieval, authorization, AI behavior, and data mapping have been verified.
 - Do not publish task data in the public repository or add a scheduled action that commits private task data into this repo.
 
 ## Tests
