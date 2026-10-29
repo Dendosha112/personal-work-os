@@ -248,6 +248,8 @@ button.primary:hover { background: #c4ff88; box-shadow: 0 7px 22px rgba(183,244,
   *, *::before, *::after { transition-duration: .01ms !important; animation-duration: .01ms !important; animation-iteration-count: 1 !important; }
 }
 
+
+.ai-provider-ready { border-color: rgba(183,244,119,.28); background: rgba(183,244,119,.075); color: var(--accent); }
 </style>
 </head>
 <body>
@@ -304,7 +306,7 @@ button.primary:hover { background: #c4ff88; box-shadow: 0 7px 22px rgba(183,244,
   </section>
   <section class="view" id="view-approvals"><div class="section-title" style="margin-top:0"><div><h2>Review proposals</h2><p>Approval applies only to the exact proposal shown.</p></div><span class="tiny-badge">03 · HUMAN CONTROL</span></div><div class="cards" id="approvalCards"></div></section>
   <section class="view" id="view-activity"><div class="panel"><div class="panel-head"><div><h2>Activity log</h2><p>Saved locally in this browser. Export a backup before clearing browser data. Restoring a backup replaces current local data and resets approvals for safety.</p></div><div style="display:flex;gap:8px;flex-wrap:wrap"><button id="exportBtn">Export backup</button><button id="importBtn">Restore backup</button><input id="importFile" type="file" accept="application/json,.json" hidden><button id="clearLogBtn">Clear log</button></div></div><div class="log" id="activityLog"></div></div></section>
-  <section class="view" id="view-settings"><div class="panel"><div class="panel-head"><div><h2>Connections & safety</h2><p>Live task reads are supported. AI routing, Notion writes, and background automation remain disabled.</p></div><span class="tiny-badge">SYSTEM</span></div><div class="settings-list"><div class="setting"><div><strong>Notion read-only connector</strong><p>Loads tasks from the existing Tasks Tracker through the secure Worker. The Notion token stays server-side; writes remain disabled.</p></div><span class="disabled-chip" id="notionConfigStatusChip">SESSION CONNECTION</span></div><div class="setting"><div><strong>AI model provider</strong><p>Rule-based demo routing only. Live model-backed classification is not enabled.</p></div><span class="disabled-chip">NOT CONNECTED</span></div><div class="setting"><div><strong>Approval gate</strong><p>Every proposal starts awaiting approval. Changing the proposal invalidates prior approval. Execution remains blocked without a verified write connector.</p></div><span class="tag ok">WRITES DISABLED</span></div><div class="setting"><div><strong>Background automation</strong><p>No scheduler, event trigger, retries or background execution are configured by this prototype.</p></div><span class="disabled-chip">DISABLED</span></div><div class="setting"><div><strong>Data storage</strong><p>Request proposals and activity logs stay in this browser. The Worker access key is held in session storage for this browser tab; it is not written to the public repository. Do not enter your Notion token here.</p></div><span class="tag ok">LOCAL ONLY</span></div></div>
+  <section class="view" id="view-settings"><div class="panel"><div class="panel-head"><div><h2>Connections & safety</h2><p>Live task reads are supported. AI routing, Notion writes, and background automation remain disabled.</p></div><span class="tiny-badge">SYSTEM</span></div><div class="settings-list"><div class="setting"><div><strong>Notion read-only connector</strong><p>Loads tasks from the existing Tasks Tracker through the secure Worker. The Notion token stays server-side; writes remain disabled.</p></div><span class="disabled-chip" id="notionConfigStatusChip">SESSION CONNECTION</span></div><div class="setting"><div><strong>AI model provider</strong><p id="aiProviderDescription">Request classification uses Cloudflare Workers AI when its binding is enabled in your Worker. It only suggests a route; it never executes an action.</p></div><span class="disabled-chip" id="aiProviderStatusChip">CHECKING WORKER</span></div><div class="setting"><div><strong>Approval gate</strong><p>Every proposal starts awaiting approval. Changing the proposal invalidates prior approval. Execution remains blocked without a verified write connector.</p></div><span class="tag ok">WRITES DISABLED</span></div><div class="setting"><div><strong>Background automation</strong><p>No scheduler, event trigger, retries or background execution are configured by this prototype.</p></div><span class="disabled-chip">DISABLED</span></div><div class="setting"><div><strong>Data storage</strong><p>Request proposals and activity logs stay in this browser. The Worker access key is held in session storage for this browser tab; it is not written to the public repository. Do not enter your Notion token here.</p></div><span class="tag ok">LOCAL ONLY</span></div></div>
 <div class="panel" style="margin-top:16px">
   <div class="panel-head"><div><h2>Read-only Notion connection</h2><p>Enter the deployed Worker URL and its separate app-access key. Never paste the Notion integration token here.</p></div><span class="tiny-badge">READ ONLY</span></div>
   <form id="notionConnectForm">
@@ -354,7 +356,10 @@ button.primary:hover { background: #c4ff88; box-shadow: 0 7px 22px rgba(183,244,
     const status = restoring ? (r.status === 'Rejected' ? 'Rejected' : 'Awaiting approval') : (validStatuses.has(r.status) ? r.status : 'Awaiting approval');
     const id = typeof r.id === 'string' && r.id.length > 0 && r.id.length <= 120 ? r.id : (crypto.randomUUID ? crypto.randomUUID() : String(Date.now()) + Math.random());
     const created = typeof r.created === 'string' && !Number.isNaN(Date.parse(r.created)) ? new Date(r.created).toISOString() : new Date().toISOString();
-    const normalized = {id,text:r.text.trim(),kind,destination:dest.name,url:dest.url,area:dest.area,risk:risk(r.text,kind),status,approvedSnapshot:null,created,proposalVersion:Number.isInteger(r.proposalVersion)&&r.proposalVersion>0&&r.proposalVersion<1000000?r.proposalVersion:1};
+    const classifier = r.classifier === "Cloudflare Workers AI" ? "Cloudflare Workers AI" : "Rule-based fallback";
+    const classificationReason = typeof r.classificationReason === "string" ? r.classificationReason.slice(0, 240) : "";
+    const confidence = Number.isFinite(r.confidence) ? Math.max(0, Math.min(1, r.confidence)) : null;
+    const normalized = {id,text:r.text.trim(),kind,destination:dest.name,url:dest.url,area:dest.area,risk:risk(r.text,kind),status,approvedSnapshot:null,created,proposalVersion:Number.isInteger(r.proposalVersion)&&r.proposalVersion>0&&r.proposalVersion<1000000?r.proposalVersion:1,classifier,classificationReason,confidence};
     const exactSnapshot = JSON.stringify({text:normalized.text,kind:normalized.kind,destination:normalized.destination,risk:normalized.risk,proposalVersion:normalized.proposalVersion});
     if(!restoring && status === 'Approved · execution not started' && typeof r.approvedSnapshot === 'string' && r.approvedSnapshot === exactSnapshot) normalized.approvedSnapshot = exactSnapshot;
     else if(!restoring && status === 'Approved · execution not started') normalized.status = 'Awaiting approval';
@@ -428,18 +433,65 @@ button.primary:hover { background: #c4ff88; box-shadow: 0 7px 22px rgba(183,244,
   }
   function risk(text,kind){const t=text.toLowerCase();if(/delete|remove|share|permission|send email|publish|payment|purchase|bulk|overwrite|cancel/.test(t))return "high";if(kind==="tasks"||kind==="planning"||kind==="dispatcher"||kind==="quality")return "medium";return "low";}
   function log(title,detail){state.logs.unshift({time:new Date().toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'}),title,detail});persistState();renderLog();}
-  function makeRequest(text){const cleaned=text.trim();if(!cleaned)return;const kind=route(cleaned);const dest=destinationMap[kind];const r={id:crypto.randomUUID?crypto.randomUUID():String(Date.now())+Math.random(),text:cleaned,kind,destination:dest.name,url:dest.url,area:dest.area,risk:risk(cleaned,kind),status:"Awaiting approval",approvedSnapshot:null,created:new Date().toISOString(),proposalVersion:1};state.requests.unshift(r);log("Proposal prepared",`Routed to ${dest.name}. No external action performed.`);render();showView("approvals");}
+  async function classifyWithAI(text) {
+    const endpoint = localStorage.getItem(WORKER_URL_KEY);
+    const appKey = sessionStorage.getItem(WORKER_SESSION_KEY);
+    const fallback = reason => ({kind:route(text),provider:"Rule-based fallback",confidence:null,reason:reason || "AI is not connected in this browser session; local rules were used."});
+    if (!endpoint || !appKey) return fallback("AI provider is not available in this browser session. Connect the read-only Worker to enable model-backed classification.");
+    try {
+      const response = await fetch(endpoint + "/api/classify", {
+        method: "POST",
+        headers: { "Accept": "application/json", "Content-Type": "application/json", "Authorization": "Bearer " + appKey },
+        body: JSON.stringify({text}),
+        cache: "no-store"
+      });
+      const body = await response.json().catch(() => ({}));
+      if (response.status === 503 && body.error === "ai_not_configured") {
+        updateAIProviderUI(false, "", "The Worker is connected, but its AI binding is not deployed yet.");
+        return fallback("Cloudflare Workers AI is not enabled on the deployed Worker; local rule-based routing was used.");
+      }
+      if (!response.ok || body.ok !== true || !destinationMap[body.kind]) {
+        updateAIProviderUI(false, "", "AI classification is unavailable or the Worker rejected the request.");
+        return fallback("AI classification failed; local rule-based routing was used instead.");
+      }
+      updateAIProviderUI(true, body.model || "Cloudflare Workers AI");
+      return {kind:body.kind,provider:"Cloudflare Workers AI",confidence:Number.isFinite(body.confidence)?body.confidence:null,reason:typeof body.reason==="string"?body.reason:"AI classified this request."};
+    } catch {
+      updateAIProviderUI(false, "", "Could not reach the AI classification endpoint. Check the Worker deployment.");
+      return fallback("The AI endpoint could not be reached; local rule-based routing was used instead.");
+    }
+  }
+  async function makeRequest(text){
+    const cleaned=text.trim();
+    if(!cleaned)return;
+    const classification = await classifyWithAI(cleaned);
+    const kind = Object.hasOwn(destinationMap, classification.kind) ? classification.kind : route(cleaned);
+    const dest=destinationMap[kind];
+    const r={id:crypto.randomUUID?crypto.randomUUID():String(Date.now())+Math.random(),text:cleaned,kind,destination:dest.name,url:dest.url,area:dest.area,risk:risk(cleaned,kind),status:"Awaiting approval",approvedSnapshot:null,created:new Date().toISOString(),proposalVersion:1,classifier:classification.provider,classificationReason:classification.reason,confidence:classification.confidence};
+    state.requests.unshift(r);
+    log("Proposal prepared",`Routed to ${dest.name} using ${classification.provider}. ${classification.reason} No external action performed.`);
+    render();showView("approvals");
+  }
   function approve(id){const r=state.requests.find(x=>x.id===id);if(!r||r.status!=="Awaiting approval")return;r.approvedSnapshot=JSON.stringify({text:r.text,kind:r.kind,destination:r.destination,risk:r.risk,proposalVersion:r.proposalVersion});r.status="Approved · execution not started";log("Proposal approved",`${r.destination}. Approval does not execute the action.`);render();}
   function reject(id){const r=state.requests.find(x=>x.id===id);if(!r)return;r.status="Rejected";r.approvedSnapshot=null;log("Proposal rejected",`${r.destination}. No external action performed.`);render();}
   function execute(id){const r=state.requests.find(x=>x.id===id);if(!r)return;const current=JSON.stringify({text:r.text,kind:r.kind,destination:r.destination,risk:r.risk,proposalVersion:r.proposalVersion});if(r.status!=="Approved · execution not started"||r.approvedSnapshot!==current){r.status="Awaiting approval";r.approvedSnapshot=null;log("Approval invalidated","The proposal changed or was not approved. Review again.");render();return;}r.status="Blocked · connector not configured";log("Execution blocked","Notion connector is not configured. No write was attempted or simulated as successful.");render();}
   function editTitle(id,value){const r=state.requests.find(x=>x.id===id);if(!r)return;r.text=value;r.proposalVersion++;if(r.approvedSnapshot){r.approvedSnapshot=null;r.status="Awaiting approval";log("Approval reset","Proposal changed after approval; renewed approval is required.");}render();}
-  function card(r){const statusClass=r.status.startsWith("Approved")?"ok":r.status.startsWith("Blocked")||r.status==="Rejected"?"fail":"status";const riskClass=r.risk;return `<article class="request-card"><div class="request-top"><div class="request-title">${safe(r.text.slice(0,130))}${r.text.length>130?"…":""}</div><span class="risk ${riskClass}">${safe(r.risk)} risk</span></div><div class="meta"><span class="tag">${safe(r.area)}</span><span class="tag">Destination: ${safe(r.destination)}</span><span class="tag ${statusClass}">${safe(r.status)}</span></div><p class="request-desc">${r.status.startsWith("Blocked")?"Execution is blocked because no live connector is configured. This is an honest blocker, not a successful write.":"Proposed request. Review the destination and scope before approving."}</p><div class="proposal"><strong>Action envelope</strong><br>Intent: ${safe(r.text)}<br>Destination: ${r.url?`<a style="color:#9ac8ff" href="${safe(r.url)}" target="_blank" rel="noreferrer">${safe(r.destination)}</a>`:safe(r.destination)}<br>Approval required: yes · Execution: not connected</div><div style="margin-top:12px"><label class="hint" for="edit-${safe(r.id)}">Editable proposal text (changing this resets approval)</label><textarea class="textarea" id="edit-${safe(r.id)}" style="min-height:60px;margin-top:6px" data-edit="${safe(r.id)}">${safe(r.text)}</textarea></div><div class="actions">${r.status==="Awaiting approval"?`<button class="primary" data-action="approve" data-id="${safe(r.id)}">Approve proposal</button><button class="danger" data-action="reject" data-id="${safe(r.id)}">Reject</button>`:""}${r.status.startsWith("Approved")?`<button data-action="execute" data-id="${safe(r.id)}">Execute approved proposal</button><button class="danger" data-action="reject" data-id="${safe(r.id)}">Revoke</button>`:""}${r.status.startsWith("Blocked")?`<button data-action="reset" data-id="${safe(r.id)}">Return to review</button>`:""}${r.status==="Rejected"?`<button data-action="reset" data-id="${safe(r.id)}">Reopen proposal</button>`:""}</div></article>`;}
+  function card(r){const statusClass=r.status.startsWith("Approved")?"ok":r.status.startsWith("Blocked")||r.status==="Rejected"?"fail":"status";const riskClass=r.risk;return `<article class="request-card"><div class="request-top"><div class="request-title">${safe(r.text.slice(0,130))}${r.text.length>130?"…":""}</div><span class="risk ${riskClass}">${safe(r.risk)} risk</span></div><div class="meta"><span class="tag">${safe(r.area)}</span><span class="tag">Destination: ${safe(r.destination)}</span><span class="tag">${safe(r.classifier||"Rule-based fallback")}</span><span class="tag ${statusClass}">${safe(r.status)}</span></div><p class="request-desc">${r.status.startsWith("Blocked")?"Execution is blocked because no live connector is configured. This is an honest blocker, not a successful write.":"Proposed request. Review the destination and scope before approving."}</p>${r.classificationReason?`<p class="request-desc">Routing rationale: ${safe(r.classificationReason)}</p>`:""}<div class="proposal"><strong>Action envelope</strong><br>Intent: ${safe(r.text)}<br>Destination: ${r.url?`<a style="color:#9ac8ff" href="${safe(r.url)}" target="_blank" rel="noreferrer">${safe(r.destination)}</a>`:safe(r.destination)}<br>Approval required: yes · Execution: not connected</div><div style="margin-top:12px"><label class="hint" for="edit-${safe(r.id)}">Editable proposal text (changing this resets approval)</label><textarea class="textarea" id="edit-${safe(r.id)}" style="min-height:60px;margin-top:6px" data-edit="${safe(r.id)}">${safe(r.text)}</textarea></div><div class="actions">${r.status==="Awaiting approval"?`<button class="primary" data-action="approve" data-id="${safe(r.id)}">Approve proposal</button><button class="danger" data-action="reject" data-id="${safe(r.id)}">Reject</button>`:""}${r.status.startsWith("Approved")?`<button data-action="execute" data-id="${safe(r.id)}">Execute approved proposal</button><button class="danger" data-action="reject" data-id="${safe(r.id)}">Revoke</button>`:""}${r.status.startsWith("Blocked")?`<button data-action="reset" data-id="${safe(r.id)}">Return to review</button>`:""}${r.status==="Rejected"?`<button data-action="reset" data-id="${safe(r.id)}">Reopen proposal</button>`:""}</div></article>`;}
   function render(){persistState();const pending=state.requests.filter(r=>r.status==="Awaiting approval").length;const approved=state.requests.filter(r=>r.status.startsWith("Approved")).length;$('statPending').textContent=pending;$('statApproved').textContent=approved;$('navCount').textContent=pending;const overview=state.requests.filter(r=>r.status==="Awaiting approval").slice(0,3);$('overviewCards').innerHTML=overview.length?overview.map(card).join(""):`<div class="empty"><strong>No proposals waiting</strong>Use the request box above to prepare your first action proposal.</div>`;$('approvalCards').innerHTML=state.requests.length?state.requests.map(card).join(""):`<div class="empty"><strong>Your queue is clear</strong>New proposals will appear here for review. Nothing runs in the background.</div>`;renderLog();}
   function renderLog(){$('activityLog').innerHTML=state.logs.length?state.logs.map(x=>`<div class="log-row"><div class="log-time">${safe(x.time)}</div><div><strong>${safe(x.title)}</strong><p>${safe(x.detail)}</p></div></div>`).join(""):`<div class="empty"><strong>No activity yet</strong>Events will appear here during this browser session.</div>`;}
   function showView(name){document.querySelectorAll('.view').forEach(el=>el.classList.toggle('active',el.id==='view-'+name));document.querySelectorAll('.nav[data-view],.mobile-tab[data-view]').forEach(el=>el.classList.toggle('active',el.dataset.view===name));$('pageTitle').textContent=titles[name][0];$('pageSubtitle').textContent=titles[name][1];const menu=$('mobileMoreMenu');if(menu)menu.classList.remove('open');const more=$('mobileMoreTab');if(more)more.setAttribute('aria-expanded','false');}
   document.querySelectorAll('[data-view]').forEach(el=>el.addEventListener('click',()=>showView(el.dataset.view)));
-  $('prepareBtn').addEventListener('click',()=>{makeRequest($('requestInput').value);$('requestInput').value='';});
-  $('prepareBtn2').addEventListener('click',()=>{makeRequest($('requestInput2').value);$('requestInput2').value='';});
+  async function submitRequest(inputId, buttonId) {
+    const input = $(inputId), button = $(buttonId);
+    const text = input.value;
+    if (!text.trim() || button.disabled) return;
+    const label = button.textContent;
+    input.disabled = true; button.disabled = true; button.textContent = 'Classifying…';
+    try { await makeRequest(text); input.value = ''; }
+    finally { input.disabled = false; button.disabled = false; button.textContent = label; }
+  }
+  $('prepareBtn').addEventListener('click',()=>submitRequest('requestInput','prepareBtn'));
+  $('prepareBtn2').addEventListener('click',()=>submitRequest('requestInput2','prepareBtn2'));
   document.addEventListener('click',e=>{const b=e.target.closest('[data-action]');if(!b)return;const id=b.dataset.id;switch(b.dataset.action){case'approve':approve(id);break;case'reject':reject(id);break;case'execute':execute(id);break;case'reset':{const r=state.requests.find(x=>x.id===id);if(r){r.status='Awaiting approval';r.approvedSnapshot=null;log('Proposal reopened','Approval required again.');render();}break;}}});
   document.addEventListener('change',e=>{const field=e.target.closest('[data-edit]');if(!field)return;const r=state.requests.find(x=>x.id===field.dataset.edit);if(r&&field.value.trim()!==r.text)editTitle(r.id,field.value.trim());});
   $('clearLogBtn').addEventListener('click',()=>{state.logs=[];persistState();renderLog();});
@@ -580,12 +632,27 @@ button.primary:hover { background: #c4ff88; box-shadow: 0 7px 22px rgba(183,244,
       return '<article class="task-item"><div class="task-item-head"><div class="task-item-title">'+safe(t.title)+'</div><span class="score">'+notionScore(t)+'/100</span></div><div class="meta">'+meta+'</div>'+(t.description?'<p>'+safe(t.description.slice(0,240))+'</p>':'')+'<div class="actions"><a href="'+safe(t.url)+'" target="_blank" rel="noopener noreferrer" style="font-size:11px;color:var(--accent)">Open in Notion ↗</a></div></article>';
     }).join('') : '<div class="empty"><strong>No active tasks returned</strong>Check the Task Tracker status values and Worker configuration.</div>';
   }
+  function updateAIProviderUI(enabled, model = "", detail = "") {
+    const chip = $('aiProviderStatusChip');
+    const description = $('aiProviderDescription');
+    if (chip) {
+      chip.classList.toggle('ai-provider-ready', Boolean(enabled));
+      chip.textContent = enabled ? 'CONNECTED' : 'NOT CONNECTED';
+    }
+    if (description) {
+      description.textContent = enabled
+        ? 'Request classification uses Cloudflare Workers AI (' + (model || 'active model') + '). Classification suggests a route only; it does not execute actions.'
+        : (detail || 'Cloudflare Workers AI is not yet enabled in the deployed Worker. Requests will use clearly labeled local rule-based fallback until it is available.');
+    }
+  }
+
   async function loadNotionTasks(workerBase, appKey) {
     const status = $('notionConnectionStatus');
     if (status) status.textContent = 'Checking Worker and querying Notion…';
     const health = await fetch(workerBase + '/api/health', { headers: { 'Accept': 'application/json' }, cache: 'no-store' });
     if (!health.ok) throw new Error('The Worker health endpoint returned HTTP ' + health.status + '.');
     const healthBody = await health.json();
+    updateAIProviderUI(healthBody.aiEnabled === true, healthBody.aiModel || "", healthBody.aiEnabled ? "" : "The Notion Worker is reachable, but the Workers AI binding has not been deployed yet.");
     if (!healthBody.configured) throw new Error('Worker is online but missing one or more server-side secrets.');
     const res = await fetch(workerBase + '/api/tasks?limit=100', { headers: { 'Accept': 'application/json', 'Authorization': 'Bearer ' + appKey }, cache: 'no-store' });
     if (res.status === 401) throw new Error('Access key rejected. Match it with the Worker APP_ACCESS_KEY secret.');
@@ -633,6 +700,7 @@ button.primary:hover { background: #c4ff88; box-shadow: 0 7px 22px rgba(183,244,
     } finally { btn.disabled = false; btn.textContent = 'Refresh from Notion'; }
   });
   updateConnectionUI(false);
+  updateAIProviderUI(false);
   const savedWorker = localStorage.getItem(WORKER_URL_KEY);
   if (savedWorker) $('notionWorkerUrl').value = savedWorker;
   const savedAccessKey = sessionStorage.getItem(WORKER_SESSION_KEY);
