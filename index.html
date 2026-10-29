@@ -82,6 +82,172 @@
   .mobile-tab { font-size: 9px; }
 }
 
+
+/* Visual refresh: clearer hierarchy, quieter surfaces, responsive spacing. */
+:root {
+  --bg: #090c11;
+  --panel: #111722;
+  --panel2: #171f2d;
+  --line: #273347;
+  --text: #f1f5fb;
+  --muted: #9baac0;
+  --accent: #b7f477;
+  --accent-ink: #16210d;
+  --radius: 18px;
+}
+html { scroll-behavior: smooth; }
+body {
+  background:
+    radial-gradient(780px 460px at 78% -15%, rgba(82, 112, 160, .20), transparent 67%),
+    radial-gradient(540px 360px at 0% 30%, rgba(183, 244, 119, .045), transparent 68%),
+    var(--bg);
+  letter-spacing: -.006em;
+}
+button, input, textarea, select { transition: border-color .16s ease, background-color .16s ease, transform .16s ease, box-shadow .16s ease; }
+button:focus-visible, a:focus-visible, input:focus-visible, textarea:focus-visible, select:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+}
+button { min-height: 38px; }
+button:hover { transform: translateY(-1px); }
+button.primary { box-shadow: 0 5px 18px rgba(183,244,119,.10); }
+button.primary:hover { background: #c4ff88; box-shadow: 0 7px 22px rgba(183,244,119,.18); }
+.app { grid-template-columns: 250px minmax(0, 1fr); }
+.sidebar {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  overflow-y: auto;
+  border-right-color: rgba(77, 94, 121, .30);
+  background: linear-gradient(180deg, rgba(13,18,27,.97), rgba(9,12,18,.94));
+  padding: 25px 15px;
+}
+.brand { padding-bottom: 27px; }
+.logo { box-shadow: 0 5px 22px rgba(183,244,119,.16); }
+.nav { min-height: 42px; border-radius: 10px; margin: 3px 0; padding: 10px 11px; }
+.nav.active { box-shadow: inset 2px 0 0 var(--accent); background: rgba(183,244,119,.075); border-color: rgba(183,244,119,.12); }
+.nav:hover:not(.active) { background: rgba(255,255,255,.035); }
+.sidebar-note { border-color: rgba(183,244,119,.16); background: linear-gradient(145deg, rgba(183,244,119,.07), rgba(17,23,34,.75)); }
+.main { padding-top: 30px; }
+.topbar {
+  align-items: flex-end;
+  margin-bottom: 22px;
+  padding-bottom: 22px;
+  border-bottom: 1px solid rgba(77,94,121,.30);
+}
+.eyebrow { display: inline-flex; align-items: center; gap: 7px; font-size: 10px; letter-spacing: .16em; }
+.eyebrow::before { content: ""; width: 18px; height: 2px; background: var(--accent); border-radius: 9px; }
+.topbar h1 { margin-top: 10px; line-height: 1.12; }
+.status-pill {
+  border: 1px solid rgba(183,244,119,.24);
+  background: rgba(183,244,119,.075);
+  color: var(--accent);
+  padding: 9px 12px;
+  border-radius: 10px;
+  letter-spacing: .035em;
+  font-size: 10px;
+}
+.status-pill.connected { border-color: rgba(183,244,119,.35); background: rgba(183,244,119,.11); color: #c7ff95; }
+.status-pill.disconnected { border-color: rgba(255,137,137,.3); background: rgba(255,137,137,.08); color: #ffaaaa; }
+.notice {
+  border-color: rgba(183,244,119,.23);
+  background: linear-gradient(105deg, rgba(183,244,119,.08), rgba(183,244,119,.025));
+  color: #d3e8c3;
+  box-shadow: 0 8px 30px rgba(0,0,0,.10);
+}
+.notice > span { color: var(--accent); font-size: 16px; }
+.notice strong { color: #f0f8e9; }
+.stats { gap: 12px; }
+.stat {
+  position: relative;
+  overflow: hidden;
+  border-color: rgba(77,94,121,.38);
+  background: linear-gradient(145deg, rgba(23,31,45,.92), rgba(15,21,31,.96));
+  padding: 16px;
+  transition: transform .18s ease, border-color .18s ease, box-shadow .18s ease;
+}
+.stat::before { content: ""; position: absolute; top: 0; left: 16px; right: 16px; height: 2px; border-radius: 0 0 8px 8px; background: linear-gradient(90deg, var(--accent), transparent 82%); opacity: .65; }
+.stat:hover { transform: translateY(-2px); border-color: rgba(183,244,119,.27); box-shadow: 0 10px 26px rgba(0,0,0,.16); }
+.stat span { line-height: 1.35; }
+.stat strong { font-size: 28px; font-variant-numeric: tabular-nums; }
+.grid { align-items: stretch; gap: 18px; }
+.panel {
+  border-color: rgba(77,94,121,.36);
+  background: linear-gradient(155deg, rgba(21,29,42,.97), rgba(14,19,28,.98));
+  box-shadow: 0 10px 32px rgba(0,0,0,.10);
+  padding: 21px;
+}
+.panel-head { margin-bottom: 19px; }
+.panel h2 { letter-spacing: -.02em; }
+.panel-head p { max-width: 54ch; }
+.textarea, .field input, .field select {
+  border-color: #2d3a50;
+  background: rgba(8,12,19,.80);
+}
+.textarea { min-height: 134px; }
+.textarea:focus, .field input:focus, .field select:focus {
+  border-color: rgba(183,244,119,.68);
+  box-shadow: 0 0 0 3px rgba(183,244,119,.07);
+}
+.flow { gap: 8px; }
+.flow span { border-color: #29384b; background: rgba(9,14,22,.66); padding: 8px 10px; }
+.flow span:first-child { color: var(--accent); border-color: rgba(183,244,119,.24); }
+.route { border-color: rgba(77,94,121,.30); background: rgba(11,16,25,.58); transition: border-color .16s ease, transform .16s ease, background .16s ease; }
+.route:hover { transform: translateX(2px); border-color: rgba(183,244,119,.24); background: rgba(183,244,119,.035); }
+.route-icon { color: var(--accent); background: rgba(183,244,119,.09); border: 1px solid rgba(183,244,119,.08); }
+.section-title { margin-top: 30px; }
+.section-title h2 { letter-spacing: -.025em; }
+.tiny-badge { border-color: #334259; background: rgba(10,15,23,.65); letter-spacing: .045em; }
+.cards { gap: 12px; }
+.request-card, .task-item {
+  border-color: rgba(77,94,121,.34);
+  background: linear-gradient(145deg, rgba(20,28,41,.95), rgba(14,19,28,.96));
+  box-shadow: 0 6px 22px rgba(0,0,0,.08);
+}
+.request-card:hover, .task-item:hover { border-color: rgba(126,151,187,.40); }
+.tag { background: rgba(9,14,22,.42); }
+.empty { border-color: #344158; background: rgba(10,15,23,.26); border-radius: 14px; }
+.setting { border-color: rgba(77,94,121,.34); background: rgba(10,15,23,.35); border-radius: 14px; }
+.disabled-chip.connected-chip { border-color: rgba(183,244,119,.28); background: rgba(183,244,119,.075); color: var(--accent); }
+.field label { font-weight: 650; }
+.footer { border-top: 1px solid rgba(77,94,121,.25); padding-top: 16px; margin-top: 30px; }
+.mobile-nav {
+  background: rgba(9,12,18,.96);
+  border-top-color: rgba(77,94,121,.36);
+  box-shadow: 0 -12px 34px rgba(0,0,0,.22);
+}
+.mobile-tab { border-radius: 11px; }
+.mobile-tab.active { color: var(--accent); background: rgba(183,244,119,.085); }
+.mobile-more-menu { border-color: rgba(77,94,121,.50); background: #121a27; }
+@media (max-width: 900px) {
+  .sidebar { display: none; }
+  .main { padding: 22px 18px calc(100px + env(safe-area-inset-bottom)); }
+  .topbar { align-items: flex-start; padding-bottom: 18px; }
+  .grid { gap: 14px; }
+  .panel { padding: 18px; }
+}
+@media (max-width: 600px) {
+  .main { padding: 15px 12px calc(98px + env(safe-area-inset-bottom)); }
+  .topbar { padding-bottom: 16px; margin-bottom: 17px; }
+  .topbar h1 { max-width: 17ch; }
+  .stats { gap: 8px; }
+  .stat { padding: 14px 12px; }
+  .stat::before { left: 12px; right: 12px; }
+  .stat strong { font-size: 24px; }
+  .panel { padding: 15px; }
+  .panel-head { align-items: flex-start; }
+  .flow { gap: 5px; }
+  .flow span { padding: 6px 8px; }
+  .section-title { margin: 22px 0 12px; }
+  .section-title button { white-space: nowrap; }
+  .request-card, .task-item { border-radius: 13px; }
+  .mobile-tab.active { box-shadow: inset 0 2px 0 var(--accent); }
+}
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after { transition-duration: .01ms !important; animation-duration: .01ms !important; animation-iteration-count: 1 !important; }
+}
+
 </style>
 </head>
 <body>
@@ -96,15 +262,15 @@
   <button class="nav" data-view="activity"><span>≡</span> Activity log</button>
   <div class="navlabel" style="margin-top:18px">System</div>
   <button class="nav" data-view="settings"><span>⚙</span> Connections & safety</button>
-  <div class="sidebar-note"><strong>Approval-first mode</strong><p>Nothing is sent to Notion or another service from this prototype. A live connector must be implemented and verified first.</p></div>
+  <div class="sidebar-note"><strong>Approval-first mode</strong><p>Live task reads use the secure Worker. Proposals and activity stay local; Notion writes remain disabled.</p></div>
 </aside>
 <main class="main">
-  <header class="topbar"><div><div class="eyebrow">Your operating system</div><h1 id="pageTitle">Good morning. Let's get organized.</h1><p class="subtitle" id="pageSubtitle">Capture a request. Review the plan. Approve before any consequential action.</p></div><div class="status-pill">● SAFE MODE · LOCAL PROTOTYPE</div></header>
-  <div class="notice"><span>⚠</span><div><strong>AI routing is still a demo; Notion writes are disabled.</strong> You can configure the separate read-only Notion connector in Settings when its secure Worker has been deployed. Nothing in this app creates, edits, completes, or deletes Notion records.</div></div>
+  <header class="topbar"><div><div class="eyebrow">Your operating system</div><h1 id="pageTitle">Good morning. Let's get organized.</h1><p class="subtitle" id="pageSubtitle">Capture a request. Review the plan. Approve before any consequential action.</p></div><div class="status-pill" id="connectionBadge">● READ-ONLY · APPROVAL-FIRST</div></header>
+  <div class="notice"><span aria-hidden="true">✓</span><div><strong>Read-only Notion sync is available.</strong> Your existing Tasks Tracker can load through the secure Worker. Request routing is still a demo, and this app does not create, edit, complete, or delete Notion records.</div></div>
   <section class="view active" id="view-overview">
-    <div class="stats"><div class="stat"><span>Awaiting approval</span><strong id="statPending">0</strong><small>Needs your decision</small></div><div class="stat"><span>Approved</span><strong id="statApproved">0</strong><small>Not executed</small></div><div class="stat"><span>Verified writes</span><strong>0</strong><small>Live connector disabled</small></div></div>
+    <div class="stats"><div class="stat"><span>Awaiting approval</span><strong id="statPending">0</strong><small>Needs your decision</small></div><div class="stat"><span>Approved</span><strong id="statApproved">0</strong><small>Not executed</small></div><div class="stat"><span>Verified writes</span><strong>0</strong><small>Writes disabled by design</small></div></div>
     <div class="grid">
-      <div class="panel"><div class="panel-head"><div><h2>Send a request</h2><p>Describe what you want your agent to do.</p></div><span class="tiny-badge">01 · CAPTURE</span></div><textarea id="requestInput" class="textarea" placeholder="Example: Plan next week's content around my college deadlines and coaching sessions, then suggest tasks for my review."></textarea><div class="formrow"><span class="hint">The prototype will classify the request and prepare a review card.</span><button class="primary" id="prepareBtn">Prepare proposal ↗</button></div><div class="flow"><span>Capture</span><b>→</b><span>Route</span><b>→</b><span>Approval</span><b>→</b><span>Execution</span><b>→</b><span>Verification</span></div></div>
+      <div class="panel"><div class="panel-head"><div><h2>Send a request</h2><p>Describe what you want your agent to do.</p></div><span class="tiny-badge">01 · CAPTURE</span></div><textarea id="requestInput" class="textarea" placeholder="Example: Plan next week's content around my college deadlines and coaching sessions, then suggest tasks for my review."></textarea><div class="formrow"><span class="hint">Demo routing only. Requests are prepared for review and never executed automatically.</span><button class="primary" id="prepareBtn">Prepare proposal ↗</button></div><div class="flow"><span>Capture</span><b>→</b><span>Route</span><b>→</b><span>Approval</span><b>→</b><span>Execution</span><b>→</b><span>Verification</span></div></div>
       <div class="panel"><div class="panel-head"><div><h2>Routing map</h2><p>Existing source-of-truth destinations.</p></div><span class="tiny-badge">02 · ROUTE</span></div><div class="route-list"><div class="route"><div class="route-icon">✓</div><div><strong>Tasks Tracker</strong><p>Tasks, deadlines, priorities, status. Existing Notion database remains authoritative.</p></div></div><div class="route"><div class="route-icon">🎯</div><div><strong>Strategy & Scorecard</strong><p>Goals, milestones, KPIs and strategic trade-offs.</p></div></div><div class="route"><div class="route-icon">◫</div><div><strong>Personal Work OS</strong><p>Routines, operating rules and durable process notes.</p></div></div><div class="route"><div class="route-icon">⇄</div><div><strong>Planning & Coordination</strong><p>Multi-area plans, dependencies and cross-domain requests.</p></div></div><div class="route"><div class="route-icon">🔎</div><div><strong>Review & Data Quality</strong><p>Audits, duplicate checks, verification and data integrity.</p></div></div><div class="route"><div class="route-icon">💬</div><div><strong>Answer-only / clarify</strong><p>Questions stay answer-only; unclear requests go to the dispatcher rather than becoming tasks by default.</p></div></div></div></div>
     </div>
     <div class="section-title"><div><h2>Approval queue</h2><p>Proposed actions stay here until you review them.</p></div><button data-view="approvals">View queue →</button></div><div class="cards" id="overviewCards"></div>
@@ -138,7 +304,7 @@
   </section>
   <section class="view" id="view-approvals"><div class="section-title" style="margin-top:0"><div><h2>Review proposals</h2><p>Approval applies only to the exact proposal shown.</p></div><span class="tiny-badge">03 · HUMAN CONTROL</span></div><div class="cards" id="approvalCards"></div></section>
   <section class="view" id="view-activity"><div class="panel"><div class="panel-head"><div><h2>Activity log</h2><p>Saved locally in this browser. Export a backup before clearing browser data. Restoring a backup replaces current local data and resets approvals for safety.</p></div><div style="display:flex;gap:8px;flex-wrap:wrap"><button id="exportBtn">Export backup</button><button id="importBtn">Restore backup</button><input id="importFile" type="file" accept="application/json,.json" hidden><button id="clearLogBtn">Clear log</button></div></div><div class="log" id="activityLog"></div></div></section>
-  <section class="view" id="view-settings"><div class="panel"><div class="panel-head"><div><h2>Connections & safety</h2><p>Current implementation status. No integration is assumed to be live.</p></div><span class="tiny-badge">SYSTEM</span></div><div class="settings-list"><div class="setting"><div><strong>Notion read-only connector</strong><p>Use the secure Worker endpoint to retrieve tasks from the existing Tasks Tracker. The app never receives the Notion integration token. Writes remain disabled.</p></div><span class="disabled-chip">CONFIGURE BELOW</span></div><div class="setting"><div><strong>AI model provider</strong><p>Rule-based demo routing only. Live model-backed classification is not enabled.</p></div><span class="disabled-chip">NOT CONNECTED</span></div><div class="setting"><div><strong>Approval gate</strong><p>Every proposal starts awaiting approval. Changing the proposal invalidates prior approval. Execution remains blocked without a verified write connector.</p></div><span class="tag ok">WRITES DISABLED</span></div><div class="setting"><div><strong>Background automation</strong><p>No scheduler, event trigger, retries or background execution are configured by this prototype.</p></div><span class="disabled-chip">DISABLED</span></div><div class="setting"><div><strong>Data storage</strong><p>Request proposals and activity logs stay in this browser. The Worker access key is held in session storage for this browser tab; it is not written to the public repository. Do not enter your Notion token here.</p></div><span class="tag ok">LOCAL ONLY</span></div></div>
+  <section class="view" id="view-settings"><div class="panel"><div class="panel-head"><div><h2>Connections & safety</h2><p>Live task reads are supported. AI routing, Notion writes, and background automation remain disabled.</p></div><span class="tiny-badge">SYSTEM</span></div><div class="settings-list"><div class="setting"><div><strong>Notion read-only connector</strong><p>Loads tasks from the existing Tasks Tracker through the secure Worker. The Notion token stays server-side; writes remain disabled.</p></div><span class="disabled-chip" id="notionConfigStatusChip">SESSION CONNECTION</span></div><div class="setting"><div><strong>AI model provider</strong><p>Rule-based demo routing only. Live model-backed classification is not enabled.</p></div><span class="disabled-chip">NOT CONNECTED</span></div><div class="setting"><div><strong>Approval gate</strong><p>Every proposal starts awaiting approval. Changing the proposal invalidates prior approval. Execution remains blocked without a verified write connector.</p></div><span class="tag ok">WRITES DISABLED</span></div><div class="setting"><div><strong>Background automation</strong><p>No scheduler, event trigger, retries or background execution are configured by this prototype.</p></div><span class="disabled-chip">DISABLED</span></div><div class="setting"><div><strong>Data storage</strong><p>Request proposals and activity logs stay in this browser. The Worker access key is held in session storage for this browser tab; it is not written to the public repository. Do not enter your Notion token here.</p></div><span class="tag ok">LOCAL ONLY</span></div></div>
 <div class="panel" style="margin-top:16px">
   <div class="panel-head"><div><h2>Read-only Notion connection</h2><p>Enter the deployed Worker URL and its separate app-access key. Never paste the Notion integration token here.</p></div><span class="tiny-badge">READ ONLY</span></div>
   <form id="notionConnectForm">
@@ -149,7 +315,7 @@
   <div id="notionConnectionStatus" class="empty" role="status" aria-live="polite" style="margin-top:12px">Not configured. Deploy the Worker and add its secrets first.</div>
 </div>
 </div></section>
-  <div class="footer">PERSONAL AGENT · APPROVAL-FIRST MVP · This local prototype saves proposals and logs only in this browser. It is not connected to Notion, an AI provider, or background automation. Export backups regularly. Do not enter passwords, API keys, or sensitive client information.</div>
+  <div class="footer">PERSONAL WORK OS · APPROVAL-FIRST · Notion tasks are fetched read-only through the secure Worker when connected. Requests, local planning tasks, and activity logs stay in this browser. AI-backed routing, Notion writes, and background automation are not enabled. Export local backups regularly and never enter your Notion API token here.</div>
 </main>
 </div>
 <nav class="mobile-nav" aria-label="Primary navigation">
@@ -362,7 +528,24 @@
     }
     return url.href.replace(/\/+$/, '');
   }
+
+  function updateConnectionUI(connected) {
+    const badge = $('connectionBadge');
+    const chip = $('notionConfigStatusChip');
+    if (badge) {
+      badge.classList.toggle('connected', Boolean(connected));
+      badge.classList.toggle('disconnected', !connected);
+      badge.textContent = connected ? '● NOTION · READ-ONLY CONNECTED' : '● SAFE MODE · READ-ONLY';
+    }
+    if (chip) {
+      chip.classList.toggle('connected-chip', Boolean(connected));
+      chip.textContent = connected ? 'CONNECTED' : 'SESSION CONNECTION';
+    }
+  }
+
   function notionStatus(message, kind = 'info') {
+    if (kind === 'success') updateConnectionUI(true);
+    else if (kind === 'error') updateConnectionUI(false);
     const el = $('notionConnectionStatus');
     if (el) {
       el.className = 'empty';
@@ -449,6 +632,7 @@
       $('notionLiveStatus').innerHTML = '<strong>Could not refresh</strong>' + safe(err.message || 'Connection failed.');
     } finally { btn.disabled = false; btn.textContent = 'Refresh from Notion'; }
   });
+  updateConnectionUI(false);
   const savedWorker = localStorage.getItem(WORKER_URL_KEY);
   if (savedWorker) $('notionWorkerUrl').value = savedWorker;
   const savedAccessKey = sessionStorage.getItem(WORKER_SESSION_KEY);
