@@ -32,6 +32,74 @@ test("tasks route requires bearer secret", async () => {
   assert.equal(res.status, 401);
 });
 
+test("classification route requires the app bearer key", async () => {
+  const aiEnv = { ...env, AI: { run: async () => { throw new Error("AI should not be called without auth"); } } };
+  const res = await worker.fetch(new Request("https://api.test/api/classify", {
+    method: "POST",
+    headers: { Origin: origin, "Content-Type": "application/json" },
+    body: JSON.stringify({ text: "Plan my week" })
+  }), aiEnv);
+  assert.equal(res.status, 401);
+});
+
+test("classification uses Workers AI and returns a validated route", async () => {
+  let selectedModel = "";
+  let modelInput;
+  const aiEnv = {
+    ...env,
+    AI: {
+      run: async (model, input) => {
+        selectedModel = model;
+        modelInput = input;
+        return { response: { kind: "planning", confidence: 0.91, reason: "Coordinates several tasks and areas.", needsClarification: false } };
+      }
+    }
+  };
+  const res = await worker.fetch(new Request("https://api.test/api/classify", {
+    method: "POST",
+    headers: { Origin: origin, Authorization: "Bearer test-long-random-key", "Content-Type": "application/json" },
+    body: JSON.stringify({ text: "Plan next week's school and coaching work" })
+  }), aiEnv);
+  assert.equal(res.status, 200);
+  const body = await res.json();
+  assert.equal(body.ok, true);
+  assert.equal(body.provider, "Cloudflare Workers AI");
+  assert.equal(body.kind, "planning");
+  assert.equal(body.confidence, 0.91);
+  assert.equal(body.needsClarification, false);
+  assert.equal(selectedModel, "@cf/meta/llama-3.3-70b-instruct-fp8-fast");
+  assert.equal(modelInput.temperature, 0);
+  assert.equal(modelInput.response_format.type, "json_schema");
+  assert.match(modelInput.messages[1].content, /school and coaching/);
+});
+
+test("classification returns unavailable when the AI binding is missing", async () => {
+  const res = await worker.fetch(new Request("https://api.test/api/classify", {
+    method: "POST",
+    headers: { Origin: origin, Authorization: "Bearer test-long-random-key", "Content-Type": "application/json" },
+    body: JSON.stringify({ text: "Plan my week" })
+  }), env);
+  assert.equal(res.status, 503);
+  assert.equal((await res.json()).error, "ai_not_configured");
+});
+
+test("classification rejects oversized and empty requests before model inference", async () => {
+  const aiEnv = { ...env, AI: { run: async () => { throw new Error("AI should not be called for invalid input"); } } };
+  const empty = await worker.fetch(new Request("https://api.test/api/classify", {
+    method: "POST",
+    headers: { Origin: origin, Authorization: "Bearer test-long-random-key", "Content-Type": "application/json" },
+    body: JSON.stringify({ text: "   " })
+  }), aiEnv);
+  assert.equal(empty.status, 400);
+  assert.equal((await empty.json()).error, "text_required");
+  const oversized = await worker.fetch(new Request("https://api.test/api/classify", {
+    method: "POST",
+    headers: { Origin: origin, Authorization: "Bearer test-long-random-key", "Content-Type": "application/json" },
+    body: JSON.stringify({ text: "x".repeat(4001) })
+  }), aiEnv);
+  assert.equal(oversized.status, 413);
+});
+
 test("tasks route calls Notion read-only query and maps fields", async (t) => {
   const original = globalThis.fetch;
   t.after(() => { globalThis.fetch = original; });
