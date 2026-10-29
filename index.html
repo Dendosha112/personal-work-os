@@ -250,6 +250,7 @@ button.primary:hover { background: #c4ff88; box-shadow: 0 7px 22px rgba(183,244,
 
 
 .ai-provider-ready { border-color: rgba(183,244,119,.28); background: rgba(183,244,119,.075); color: var(--accent); }
+.ai-provider-enabled { border-color: rgba(245,203,105,.28); background: rgba(245,203,105,.075); color: var(--yellow); }
 </style>
 </head>
 <body>
@@ -268,7 +269,7 @@ button.primary:hover { background: #c4ff88; box-shadow: 0 7px 22px rgba(183,244,
 </aside>
 <main class="main">
   <header class="topbar"><div><div class="eyebrow">Your operating system</div><h1 id="pageTitle">Good morning. Let's get organized.</h1><p class="subtitle" id="pageSubtitle">Capture a request. Review the plan. Approve before any consequential action.</p></div><div class="status-pill" id="connectionBadge">● READ-ONLY · APPROVAL-FIRST</div></header>
-  <div class="notice"><span aria-hidden="true">✓</span><div><strong>Read-only Notion sync is available.</strong> Your existing Tasks Tracker can load through the secure Worker. Request routing is still a demo, and this app does not create, edit, complete, or delete Notion records.</div></div>
+  <div class="notice"><span aria-hidden="true">✓</span><div><strong>Read-only Notion sync is available.</strong> Request intake can use Cloudflare Workers AI for model-backed classification when inference succeeds; rule-based fallback is clearly labeled. This app does not create, edit, complete, or delete Notion records.</div></div>
   <section class="view active" id="view-overview">
     <div class="stats"><div class="stat"><span>Awaiting approval</span><strong id="statPending">0</strong><small>Needs your decision</small></div><div class="stat"><span>Approved</span><strong id="statApproved">0</strong><small>Not executed</small></div><div class="stat"><span>Verified writes</span><strong>0</strong><small>Writes disabled by design</small></div></div>
     <div class="grid">
@@ -454,7 +455,7 @@ button.primary:hover { background: #c4ff88; box-shadow: 0 7px 22px rgba(183,244,
         updateAIProviderUI(false, "", "AI classification is unavailable or the Worker rejected the request.");
         return fallback("AI classification failed; local rule-based routing was used instead.");
       }
-      updateAIProviderUI(true, body.model || "Cloudflare Workers AI");
+      updateAIProviderUI(true, body.model || "Cloudflare Workers AI", "", true);
       return {kind:body.kind,provider:"Cloudflare Workers AI",confidence:Number.isFinite(body.confidence)?body.confidence:null,reason:typeof body.reason==="string"?body.reason:"AI classified this request."};
     } catch {
       updateAIProviderUI(false, "", "Could not reach the AI classification endpoint. Check the Worker deployment.");
@@ -632,16 +633,19 @@ button.primary:hover { background: #c4ff88; box-shadow: 0 7px 22px rgba(183,244,
       return '<article class="task-item"><div class="task-item-head"><div class="task-item-title">'+safe(t.title)+'</div><span class="score">'+notionScore(t)+'/100</span></div><div class="meta">'+meta+'</div>'+(t.description?'<p>'+safe(t.description.slice(0,240))+'</p>':'')+'<div class="actions"><a href="'+safe(t.url)+'" target="_blank" rel="noopener noreferrer" style="font-size:11px;color:var(--accent)">Open in Notion ↗</a></div></article>';
     }).join('') : '<div class="empty"><strong>No active tasks returned</strong>Check the Task Tracker status values and Worker configuration.</div>';
   }
-  function updateAIProviderUI(enabled, model = "", detail = "") {
+  function updateAIProviderUI(enabled, model = "", detail = "", inferenceTested = false) {
     const chip = $('aiProviderStatusChip');
     const description = $('aiProviderDescription');
     if (chip) {
-      chip.classList.toggle('ai-provider-ready', Boolean(enabled));
-      chip.textContent = enabled ? 'CONNECTED' : 'NOT CONNECTED';
+      chip.classList.toggle('ai-provider-ready', Boolean(enabled && inferenceTested));
+      chip.classList.toggle('ai-provider-enabled', Boolean(enabled && !inferenceTested));
+      chip.textContent = enabled ? (inferenceTested ? 'CONNECTED · TESTED' : 'ENABLED · NOT TESTED') : 'NOT CONNECTED';
     }
     if (description) {
       description.textContent = enabled
-        ? 'Request classification uses Cloudflare Workers AI (' + (model || 'active model') + '). Classification suggests a route only; it does not execute actions.'
+        ? (inferenceTested
+          ? 'Cloudflare Workers AI inference succeeded (' + (model || 'active model') + '). It only classifies a request; it does not execute actions.'
+          : 'Cloudflare Workers AI binding is enabled (' + (model || 'model configured') + '). Submit a request to verify a real inference call.')
         : (detail || 'Cloudflare Workers AI is not yet enabled in the deployed Worker. Requests will use clearly labeled local rule-based fallback until it is available.');
     }
   }
@@ -652,7 +656,7 @@ button.primary:hover { background: #c4ff88; box-shadow: 0 7px 22px rgba(183,244,
     const health = await fetch(workerBase + '/api/health', { headers: { 'Accept': 'application/json' }, cache: 'no-store' });
     if (!health.ok) throw new Error('The Worker health endpoint returned HTTP ' + health.status + '.');
     const healthBody = await health.json();
-    updateAIProviderUI(healthBody.aiEnabled === true, healthBody.aiModel || "", healthBody.aiEnabled ? "" : "The Notion Worker is reachable, but the Workers AI binding has not been deployed yet.");
+    updateAIProviderUI(healthBody.aiEnabled === true, healthBody.aiModel || "", healthBody.aiEnabled ? "Workers AI binding is present; submit a request to verify inference." : "The Notion Worker is reachable, but the Workers AI binding has not been deployed yet.", false);
     if (!healthBody.configured) throw new Error('Worker is online but missing one or more server-side secrets.');
     const res = await fetch(workerBase + '/api/tasks?limit=100', { headers: { 'Accept': 'application/json', 'Authorization': 'Bearer ' + appKey }, cache: 'no-store' });
     if (res.status === 401) throw new Error('Access key rejected. Match it with the Worker APP_ACCESS_KEY secret.');
