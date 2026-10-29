@@ -55,10 +55,15 @@ jobs:
           console.log(`Mode: ${health.mode || 'unknown'}`);
           console.log(`Required runtime configuration: ${health.configured === true ? 'present' : 'missing'}`);
           console.log(`Notion writes enabled: ${health.writesEnabled === true}`);
+          console.log(`AI provider binding: ${health.aiEnabled === true ? 'enabled' : 'missing'}`);
+          console.log(`AI model: ${health.aiModel || 'none'}`);
           const missing = Array.isArray(health.missingConfiguration) ? health.missingConfiguration : [];
           console.log(`Missing runtime settings: ${missing.length ? missing.join(', ') : 'none or not reported by deployed version'}`);
           if (health.ok !== true || health.mode !== 'read-only' || health.configured !== true) {
             throw new Error(`Worker reports missing configuration: ${missing.join(', ') || 'the deployed version did not report the missing names'}. Verify the exact names under Cloudflare Worker Settings → Variables and Secrets.`);
+          }
+          if (health.aiEnabled !== true) {
+            throw new Error('Cloudflare Workers AI binding is not active on the deployed Worker. Deploy the latest root wrangler.jsonc and worker/src/index.mjs.');
           }
 
           const authResponse = await fetch(`${base}/api/tasks?limit=1`, {
@@ -70,5 +75,17 @@ jobs:
           if (authResponse.status !== 401) {
             throw new Error(`Unexpected task endpoint response: HTTP ${authResponse.status}; expected 401 for an unauthenticated request.`);
           }
-          console.log('Live Worker health and read-only authorization gate passed.');
+
+          const classifyResponse = await fetch(`${base}/api/classify`, {
+            method: 'POST',
+            headers: { Origin: origin, Accept: 'application/json', 'Content-Type': 'application/json' },
+            body: JSON.stringify({ text: 'Validation probe only; do not execute anything.' }),
+            cache: 'no-store',
+            signal
+          });
+          console.log(`AI classification endpoint without app key: HTTP ${classifyResponse.status} (expected 401)`);
+          if (classifyResponse.status !== 401) {
+            throw new Error(`AI classification endpoint is not present or did not enforce authentication: HTTP ${classifyResponse.status}; expected 401.`);
+          }
+          console.log('Live Worker health, AI binding, endpoint presence, and read-only authorization gates passed.');
           NODE
