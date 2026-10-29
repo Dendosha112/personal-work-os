@@ -31,6 +31,57 @@
  .mobile-tab{min-width:0}
  .status-pill{white-space:normal;max-width:100%}
 }
+
+/* Phone layout refinement: reduce cramped metric cards and protect fixed tabs. */
+@media (max-width: 600px) {
+  html { -webkit-text-size-adjust: 100%; }
+  body { font-size: 14px; padding-bottom: calc(78px + env(safe-area-inset-bottom)); }
+  .main { padding: 16px 12px calc(92px + env(safe-area-inset-bottom)); }
+  .topbar { display: block; margin-bottom: 18px; }
+  .topbar h1 { font-size: clamp(24px, 6.1vw, 29px); line-height: 1.12; letter-spacing: -.035em; }
+  .subtitle { font-size: 14px; line-height: 1.45; }
+  .status-pill { display: inline-block; margin-top: 12px; font-size: 10px; padding: 7px 9px; }
+  .notice { font-size: 12px; line-height: 1.5; padding: 11px 12px; gap: 8px; margin-bottom: 14px; }
+  .notice strong { display: inline; }
+  .stats { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; margin-bottom: 12px; }
+  .stat { min-width: 0; padding: 12px; }
+  .stat span { font-size: 11px; line-height: 1.3; min-height: 29px; }
+  .stat strong { font-size: 23px; margin-top: 5px; }
+  .stat small { font-size: 10px; line-height: 1.35; }
+  .stats .stat:last-child { grid-column: 1 / -1; }
+  .panel { padding: 14px; border-radius: 14px; }
+  .panel-head { gap: 8px; margin-bottom: 12px; }
+  .panel h2 { font-size: 15px; }
+  .panel-head p { font-size: 12px; }
+  .tiny-badge { font-size: 9px; padding: 4px 6px; }
+  .textarea { min-height: 108px; font-size: 15px; padding: 12px; }
+  .formrow { align-items: stretch; gap: 9px; }
+  .formrow button { min-height: 44px; }
+  .flow { gap: 5px; }
+  .flow span { font-size: 9px; padding: 6px 7px; }
+  .section-title { gap: 8px; align-items: flex-start; margin-top: 20px; }
+  .section-title h2 { font-size: 16px; }
+  .section-title p { font-size: 11px; line-height: 1.4; }
+  .request-card, .task-item { padding: 12px; }
+  .setting { display: block; padding: 12px; }
+  .setting .disabled-chip, .setting .tag { display: inline-block; margin-top: 10px; }
+  .mobile-nav {
+    padding: 4px 6px calc(4px + env(safe-area-inset-bottom));
+    gap: 1px;
+    background: rgba(12,16,24,.98);
+    box-shadow: 0 -6px 22px rgba(0,0,0,.20);
+  }
+  .mobile-tab { min-height: 46px; padding: 5px 1px; font-size: 10px; }
+  .mobile-tab .tab-icon { font-size: 18px; }
+}
+@media (max-width: 360px) {
+  .main { padding-left: 10px; padding-right: 10px; }
+  .stats { gap: 6px; }
+  .stat { padding: 10px; }
+  .stat strong { font-size: 21px; }
+  .mobile-tab { font-size: 9px; }
+}
+
 </style>
 </head>
 <body>
