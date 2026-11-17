@@ -22,6 +22,8 @@ jobs:
           node-version: "22"
       - name: Run read-only Worker tests
         run: node --test worker/test/*.test.mjs
+      - name: Validate Company OS registry and autonomy boundaries
+        run: node --test company-os/test/*.test.mjs
       - name: Check inline browser JavaScript syntax
         run: |
           node --input-type=module <<'NODE'

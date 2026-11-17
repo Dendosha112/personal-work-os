@@ -1,0 +1,269 @@
+{
+  "schemaVersion": 1,
+  "product": {
+    "id": "company-os",
+    "name": "Company OS",
+    "description": "Approval-first operating layer for Personal Work OS."
+  },
+  "autonomy": {
+    "defaultMode": "proposal_only",
+    "externalWritesEnabled": false,
+    "backgroundExecutionEnabled": false,
+    "requireHumanApprovalFor": [
+      "external_write",
+      "publish",
+      "send_message",
+      "financial_change",
+      "permission_change",
+      "delete",
+      "bulk_action",
+      "recurring_execution"
+    ]
+  },
+  "departments": [
+    {
+      "id": "executive-office",
+      "name": "Executive Office",
+      "mandate": "Set company priorities, coordinate departments, surface decisions, and escalate risks.",
+      "initialScope": [
+        "company priorities",
+        "cross-department coordination",
+        "decision briefs"
+      ]
+    },
+    {
+      "id": "marketing-brand",
+      "name": "Marketing & Brand",
+      "mandate": "Plan brand positioning, content, campaigns, and channel performance.",
+      "initialScope": [
+        "brand guidance",
+        "content planning",
+        "campaign briefs"
+      ]
+    },
+    {
+      "id": "sales-customer-relations",
+      "name": "Sales & Customer Relations",
+      "mandate": "Organize lead pipelines, customer inquiries, follow-ups, and relationship workflows.",
+      "initialScope": [
+        "lead qualification proposals",
+        "CRM workflow design",
+        "customer follow-up drafts"
+      ]
+    },
+    {
+      "id": "service-delivery",
+      "name": "Service Delivery",
+      "mandate": "Coordinate service onboarding, delivery standards, progress reviews, and quality checks.",
+      "initialScope": [
+        "client onboarding plans",
+        "service delivery checklists",
+        "quality review proposals"
+      ]
+    },
+    {
+      "id": "operations-administration",
+      "name": "Operations & Administration",
+      "mandate": "Maintain operating procedures, schedules, workload coordination, and documentation quality.",
+      "initialScope": [
+        "SOP drafts",
+        "scheduling proposals",
+        "operations checklists"
+      ]
+    },
+    {
+      "id": "finance-business-intelligence",
+      "name": "Finance & Business Intelligence",
+      "mandate": "Prepare budget visibility, financial summaries, forecasts, and performance scorecards.",
+      "initialScope": [
+        "budget summaries",
+        "financial analysis drafts",
+        "KPI definitions"
+      ]
+    },
+    {
+      "id": "research-development",
+      "name": "Research & Development",
+      "mandate": "Research opportunities, evaluate experiments, and propose product or system improvements.",
+      "initialScope": [
+        "research briefs",
+        "experiment proposals",
+        "automation design"
+      ]
+    }
+  ],
+  "agents": [
+    {
+      "id": "ceo-master-orchestrator",
+      "name": "CEO Master Orchestrator",
+      "departmentId": "executive-office",
+      "role": "orchestrator",
+      "status": "design_only",
+      "mandate": "Interpret incoming requests, retrieve relevant approved context, create a dependency-aware plan, route work to department leads, and present one consolidated proposal for human review.",
+      "inputContract": [
+        "original_request",
+        "known_constraints",
+        "relevant_source_references"
+      ],
+      "outputContract": [
+        "intent_summary",
+        "clarifications_needed",
+        "department_assignments",
+        "dependency_graph",
+        "approval_proposal"
+      ],
+      "allowedTools": [],
+      "executionMode": "proposal_only",
+      "approvalPolicy": "Human approval is required before any external action; this agent cannot execute external actions."
+    },
+    {
+      "id": "executive-office-lead",
+      "name": "Executive Office Lead",
+      "departmentId": "executive-office",
+      "role": "department_lead",
+      "status": "design_only",
+      "mandate": "Translate approved company priorities into coordinated departmental objectives and decision briefs.",
+      "inputContract": [
+        "company_objective",
+        "strategy_context",
+        "department_status"
+      ],
+      "outputContract": [
+        "priority_brief",
+        "department_recommendations",
+        "risks_and_escalations"
+      ],
+      "allowedTools": [],
+      "executionMode": "proposal_only",
+      "approvalPolicy": "Recommendations only; no external actions."
+    },
+    {
+      "id": "marketing-brand-lead",
+      "name": "Marketing & Brand Lead",
+      "departmentId": "marketing-brand",
+      "role": "department_lead",
+      "status": "design_only",
+      "mandate": "Prepare brand-aligned content and campaign proposals using approved brand guidance.",
+      "inputContract": [
+        "campaign_goal",
+        "audience_context",
+        "approved_brand_sources"
+      ],
+      "outputContract": [
+        "content_plan",
+        "campaign_brief",
+        "measurement_plan"
+      ],
+      "allowedTools": [],
+      "executionMode": "proposal_only",
+      "approvalPolicy": "Drafts only; publishing requires separate human approval."
+    },
+    {
+      "id": "sales-customer-relations-lead",
+      "name": "Sales & Customer Relations Lead",
+      "departmentId": "sales-customer-relations",
+      "role": "department_lead",
+      "status": "design_only",
+      "mandate": "Prepare lead qualification, CRM workflow, and customer communication proposals.",
+      "inputContract": [
+        "sales_goal",
+        "lead_context",
+        "approved_service_information"
+      ],
+      "outputContract": [
+        "lead_summary",
+        "pipeline_recommendation",
+        "message_draft"
+      ],
+      "allowedTools": [],
+      "executionMode": "proposal_only",
+      "approvalPolicy": "Drafts only; contacting customers or changing CRM records requires separate human approval."
+    },
+    {
+      "id": "service-delivery-lead",
+      "name": "Service Delivery Lead",
+      "departmentId": "service-delivery",
+      "role": "department_lead",
+      "status": "design_only",
+      "mandate": "Prepare consistent onboarding, service delivery, and quality review plans.",
+      "inputContract": [
+        "service_request",
+        "approved_service_standards",
+        "relevant_client_context"
+      ],
+      "outputContract": [
+        "delivery_plan",
+        "checklist",
+        "quality_review"
+      ],
+      "allowedTools": [],
+      "executionMode": "proposal_only",
+      "approvalPolicy": "Planning and review only; changes to customer records require separate human approval."
+    },
+    {
+      "id": "operations-administration-lead",
+      "name": "Operations & Administration Lead",
+      "departmentId": "operations-administration",
+      "role": "department_lead",
+      "status": "design_only",
+      "mandate": "Prepare SOPs, schedules, handoffs, and operational improvement proposals.",
+      "inputContract": [
+        "operations_goal",
+        "existing_process_sources",
+        "constraints"
+      ],
+      "outputContract": [
+        "SOP_draft",
+        "workflow_map",
+        "schedule_proposal"
+      ],
+      "allowedTools": [],
+      "executionMode": "proposal_only",
+      "approvalPolicy": "Drafts only; calendar, system, or process changes require separate human approval."
+    },
+    {
+      "id": "finance-business-intelligence-lead",
+      "name": "Finance & Business Intelligence Lead",
+      "departmentId": "finance-business-intelligence",
+      "role": "department_lead",
+      "status": "design_only",
+      "mandate": "Prepare transparent financial analysis and scorecard proposals from authorized source data.",
+      "inputContract": [
+        "analysis_question",
+        "authorized_financial_sources",
+        "reporting_period"
+      ],
+      "outputContract": [
+        "financial_summary",
+        "assumptions",
+        "KPI_scorecard",
+        "data_gaps"
+      ],
+      "allowedTools": [],
+      "executionMode": "proposal_only",
+      "approvalPolicy": "Analysis only; payments, transfers, purchases, or financial record changes are prohibited without explicit human approval and a separately authorized connector."
+    },
+    {
+      "id": "research-development-lead",
+      "name": "Research & Development Lead",
+      "departmentId": "research-development",
+      "role": "department_lead",
+      "status": "design_only",
+      "mandate": "Produce evidence-based research briefs and evaluate proposed product, process, and system experiments.",
+      "inputContract": [
+        "research_question",
+        "scope",
+        "approved_internal_context"
+      ],
+      "outputContract": [
+        "research_brief",
+        "evidence_and_sources",
+        "experiment_proposal",
+        "limitations"
+      ],
+      "allowedTools": [],
+      "executionMode": "proposal_only",
+      "approvalPolicy": "Research and proposals only; no external actions."
+    }
+  ]
+}
